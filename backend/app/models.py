@@ -43,6 +43,13 @@ class Post(Base):
     hook_type = Column(String(50), default="statement")  # question, listicle, story, statement
     has_personal_story = Column(Boolean, default=False)
     has_code_example = Column(Boolean, default=False)
+    
+    # Visual and Scheduling fields
+    image_url = Column(Text, nullable=True)
+    image_prompt = Column(Text, nullable=True)
+    scheduled_for = Column(DateTime(timezone=True), nullable=True)
+    decision_trail = Column(JSON, default=list)
+
     created_at = Column(DateTime(timezone=True), default=utc_now)
 
     creator = relationship("Creator", back_populates="posts")
@@ -106,6 +113,7 @@ class GenerationRun(Base):
     quality_score = Column(Float, nullable=True)
     retries = Column(Integer, default=0)
     latency_ms = Column(Integer, default=0)
+    decision_trail = Column(JSON, default=list)
     created_at = Column(DateTime(timezone=True), default=utc_now)
 
     creator = relationship("Creator", back_populates="generation_runs")

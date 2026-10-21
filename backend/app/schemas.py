@@ -1,4 +1,4 @@
-from typing import List, Optional, Any, Dict
+from typing import List, Optional, Any, Dict, Union
 from pydantic import BaseModel, Field, ConfigDict
 from datetime import datetime
 
@@ -41,19 +41,34 @@ class Review(BaseModel):
     clarity: int = Field(..., ge=1, le=10)
     specificity: int = Field(..., ge=1, le=10)
     overall: float = Field(..., ge=1.0, le=10.0)
-    feedback: List[str] = []
+    feedback: Union[List[str], str] = []
 
 class RepurposedContent(BaseModel):
     linkedin_post: str
     x_thread: List[str]
     instagram_caption: str
 
+class VisualDirection(BaseModel):
+    prompt: str
+    style: str
+    visual_rationale: str
+    image_url: Optional[str] = None
+
+class DecisionLog(BaseModel):
+    agent: str  # "Strategist", "Writer", "Editor", "Visual", "Learner"
+    decision: str
+    reason: str
+    confidence: Optional[float] = None
+    timestamp: Optional[str] = None
+
 class GeneratedContent(BaseModel):
     main_content: str
     linkedin_post: str
     x_thread: List[str]
     instagram_caption: str
+    visual: VisualDirection
     self_review: Review
+    decision_trail: List[DecisionLog] = []
 
 # --- API Request & Response Schemas ---
 class CreatorProfile(BaseModel):
@@ -135,18 +150,27 @@ class PostResponse(BaseModel):
     body: str
     status: str
     published_at: Optional[datetime] = None
+    scheduled_for: Optional[datetime] = None
+    image_url: Optional[str] = None
+    image_prompt: Optional[str] = None
     word_count: int
     hook_type: str
     has_personal_story: bool
     has_code_example: bool
     created_at: datetime
     metric: Optional[MetricResponse] = None
+    decision_trail: Optional[List[Dict[str, Any]]] = None
 
     model_config = ConfigDict(from_attributes=True)
+
+class SchedulePostRequest(BaseModel):
+    scheduled_for: Optional[datetime] = None
+    minutes_from_now: Optional[int] = 60
 
 class PostDetailResponse(PostResponse):
     versions: List[PostVersionResponse] = []
     strategy: Optional[Dict[str, Any]] = None
+    visual: Optional[Dict[str, Any]] = None
 
 class FeatureLiftItem(BaseModel):
     feature_group: str

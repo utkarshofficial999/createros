@@ -1,5 +1,5 @@
 from typing import List
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, desc
@@ -8,10 +8,11 @@ from sqlalchemy.orm import selectinload
 from backend.app.db import get_db
 from backend.app.models import Post, PostVersion, Metric
 from backend.app.schemas import (
-    PostResponse, PostDetailResponse, PostVersionResponse, CreateVersionRequest, MetricResponse
+    PostResponse, PostDetailResponse, PostVersionResponse, CreateVersionRequest, MetricResponse, SchedulePostRequest
 )
 from backend.app.services.features import extract_features
 from backend.app.services.simulator import simulate_metrics_for_post
+from backend.app.services.scheduler import schedule_post_publication
 
 router = APIRouter(prefix="/api/posts", tags=["posts"])
 
@@ -133,3 +134,23 @@ async def simulate_engagement(post_id: int, db: AsyncSession = Depends(get_db)):
     await db.commit()
     await db.refresh(metric)
     return metric
+
+@router.post("/{post_id}/schedule", response_model=PostResponse)
+async def schedule_post(post_id: int, req: SchedulePostRequest, db: AsyncSession = Depends(get_db)):
+    post = await db.get(Post, post_id)
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+
+    if req.scheduled_for:
+        target_time = req.scheduled_for
+    else:
+        target_time = datetime.now(timezone.utc) + timedelta(minutes=req.minutes_from_now or 60)
+
+    post.status = "scheduled"
+    post.scheduled_for = target_time
+    await db.commit()
+    await db.refresh(post)
+
+    # Register in APScheduler
+    schedule_post_publication(post.id, target_time)
+    return post

@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.app.config import settings
 from backend.app.seed.seed import seed_database
+from backend.app.services.scheduler import start_scheduler, shutdown_scheduler
 from backend.app.routers import (
     creator, ideas, generate, posts, analytics, learning, compare
 )
@@ -12,7 +13,12 @@ from backend.app.routers import (
 async def lifespan(app: FastAPI):
     # Auto-seed database if running for first time
     await seed_database(reset=False)
-    yield
+    # Start background job scheduler for queueing and scheduled posts
+    start_scheduler()
+    try:
+        yield
+    finally:
+        shutdown_scheduler()
 
 app = FastAPI(
     title="CreatorOS API",

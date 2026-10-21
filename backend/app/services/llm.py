@@ -28,33 +28,30 @@ async def call_llm(
     and a robust demo-fallback mock engine to guarantee 100% stage reliability.
     """
     provider = settings.LLM_PROVIDER
+    mesh_key = os.getenv("MESH_API_KEY") or settings.MESH_API_KEY
     groq_key = os.getenv("GROQ_API_KEY") or settings.GROQ_API_KEY
     openai_key = os.getenv("OPENAI_API_KEY") or settings.OPENAI_API_KEY
     gemini_key = os.getenv("GEMINI_API_KEY") or settings.GEMINI_API_KEY
 
-    # Auto-detect real provider if keys exist (prioritize Groq for blazing speed)
-    if provider == "auto":
-        if groq_key:
-            provider = "groq"
-        elif gemini_key:
-            provider = "gemini"
-        elif openai_key:
-            provider = "openai"
-        else:
-            provider = "demo"
+    # Mesh API is the official hackathon sponsor and mandatory primary gateway
+    if mesh_key:
+        try:
+            return await _call_mesh(prompt, system_prompt, response_model, mesh_key)
+        except Exception as e:
+            print(f"[Mesh API Notice] Call note ({e}). Falling back to secondary/demo engine.")
 
-    # Attempt real provider if configured
-    if provider == "groq" and groq_key:
+    # Local development / alternate provider fallback
+    if groq_key:
         try:
             return await _call_groq(prompt, system_prompt, response_model, groq_key)
         except Exception as e:
             print(f"[LLM Notice] Groq API call note ({e}). Falling back to internal demo engine.")
-    elif provider == "gemini" and gemini_key:
+    elif gemini_key:
         try:
             return await _call_gemini(prompt, system_prompt, response_model, gemini_key)
         except Exception as e:
             print(f"[LLM Warning] Gemini call failed ({e}). Falling back to internal demo engine.")
-    elif provider == "openai" and openai_key:
+    elif openai_key:
         try:
             return await _call_openai(prompt, system_prompt, response_model, openai_key)
         except Exception as e:
@@ -64,14 +61,71 @@ async def call_llm(
     return _call_demo_engine(stage_name, prompt, response_model, context_data)
 
 
-async def _call_groq(prompt: str, system_prompt: str, response_model: Optional[Type[T]], api_key: str) -> Any:
-    from groq import AsyncGroq
-    client = AsyncGroq(api_key=api_key)
+async def _call_mesh(prompt: str, system_prompt: str, response_model: Optional[Type[T]], api_key: str) -> Any:
+    """
+    Official Mesh API Gateway routing (base_url: https://api.meshapi.ai/v1).
+    All LLM requests in the hackathon route through this sponsor gateway.
+    """
+    from openai import AsyncOpenAI
+    client = AsyncOpenAI(
+        base_url=settings.MESH_BASE_URL,
+        api_key=api_key
+    )
+
+    # Ensure "json" is explicitly present in messages when response_format is json_object
+    req_system = system_prompt or ""
+    req_prompt = prompt
+    if response_model and "json" not in f"{req_system} {req_prompt}".lower():
+        req_system = (req_system + "\n\nYou must respond with a valid JSON object matching the requested schema.").strip()
 
     messages = []
-    if system_prompt:
-        messages.append({"role": "system", "content": system_prompt})
-    messages.append({"role": "user", "content": prompt})
+    if req_system:
+        messages.append({"role": "system", "content": req_system})
+    messages.append({"role": "user", "content": req_prompt})
+
+    res = await client.chat.completions.create(
+        model=settings.MESH_MODEL,
+        messages=messages,
+        response_format={"type": "json_object"} if response_model else None,
+        temperature=0.7
+    )
+    content = res.choices[0].message.content or ""
+
+    if not response_model:
+        return content
+
+    try:
+        clean = clean_json_string(content)
+        return response_model.model_validate_json(clean)
+    except ValidationError as err:
+        retry_messages = list(messages)
+        retry_messages.append({"role": "assistant", "content": content})
+        retry_messages.append({
+            "role": "user",
+            "content": f"Schema validation error: {err}. Please return valid JSON matching the schema."
+        })
+        retry_res = await client.chat.completions.create(
+            model=settings.MESH_MODEL,
+            messages=retry_messages,
+            response_format={"type": "json_object"}
+        )
+        return response_model.model_validate_json(clean_json_string(retry_res.choices[0].message.content or ""))
+
+
+async def _call_groq(prompt: str, system_prompt: str, response_model: Optional[Type[T]], api_key: str) -> Any:
+    from groq import AsyncGroq
+    client = AsyncGroq(api_key=api_key, max_retries=0)
+
+    # Ensure "json" is explicitly present in messages when response_format is json_object
+    req_system = system_prompt or ""
+    req_prompt = prompt
+    if response_model and "json" not in f"{req_system} {req_prompt}".lower():
+        req_system = (req_system + "\n\nYou must respond with a valid JSON object matching the requested schema.").strip()
+
+    messages = []
+    if req_system:
+        messages.append({"role": "system", "content": req_system})
+    messages.append({"role": "user", "content": req_prompt})
 
     res = await client.chat.completions.create(
         model=settings.GROQ_MODEL,
@@ -106,10 +160,16 @@ async def _call_openai(prompt: str, system_prompt: str, response_model: Optional
     from openai import AsyncOpenAI
     client = AsyncOpenAI(api_key=api_key)
 
+    # Ensure "json" is explicitly present in messages when response_format is json_object
+    req_system = system_prompt or ""
+    req_prompt = prompt
+    if response_model and "json" not in f"{req_system} {req_prompt}".lower():
+        req_system = (req_system + "\n\nYou must respond with a valid JSON object matching the requested schema.").strip()
+
     messages = []
-    if system_prompt:
-        messages.append({"role": "system", "content": system_prompt})
-    messages.append({"role": "user", "content": prompt})
+    if req_system:
+        messages.append({"role": "system", "content": req_system})
+    messages.append({"role": "user", "content": req_prompt})
 
     # First attempt
     res = await client.chat.completions.create(
@@ -317,6 +377,15 @@ def _call_demo_engine(stage_name: str, prompt: str, response_model: Optional[Typ
                     "Directly embodies the creator's winning patterns with high engagement potential."
                 ]
             }
+        return response_model.model_validate(data) if response_model else data
+
+    elif stage_name == "visual":
+        data = {
+            "prompt": f"A sleek isometric 3D architectural blueprint of {topic}, glowing cyan and indigo data pipelines, dark glassmorphic server nodes, octane render, 8k resolution, cinematic lighting.",
+            "style": "Isometric 3D Architecture Blueprint",
+            "visual_rationale": "Elevates the technical authority of the piece and creates high visual stopping power in social feeds.",
+            "image_url": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80"
+        }
         return response_model.model_validate(data) if response_model else data
 
     elif stage_name == "repurposer":

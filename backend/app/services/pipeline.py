@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 
 from backend.app.models import Creator, Post, PostVersion, GenerationRun, CreatorModelRecord
 from backend.app.schemas import (
-    Strategy, Review, GeneratedContent, RepurposedContent, CreatorModel
+    Strategy, Review, GeneratedContent, RepurposedContent, CreatorModel, VisualDirection
 )
 from backend.app.services.llm import call_llm
 from backend.app.services.features import extract_features
@@ -160,8 +160,49 @@ async def execute_content_pipeline(
         feedback_notes = review_res.feedback
         await asyncio.sleep(0.4)
 
+    # Auditable Decision Trail
+    decision_trail = [
+        {
+            "agent": "Strategist",
+            "decision": f"Selected angle: '{strategy_res.angle}' and hook: '{chosen_hook}'",
+            "reason": strategy_res.why_this_works,
+            "timestamp": datetime.now(timezone.utc).isoformat()
+        },
+        {
+            "agent": "Editor",
+            "decision": f"Score: {final_review.overall}/10 after {len(feedback_notes) + 1} iteration(s)",
+            "reason": "; ".join(final_review.feedback) if final_review.feedback else "Draft met quality gate standards.",
+            "timestamp": datetime.now(timezone.utc).isoformat()
+        }
+    ]
+
     # =========================================================================
-    # STAGE 3: REPURPOSER (PARALLEL DISTRIBUTION FORMATS)
+    # STAGE 3: VISUAL AGENT (MATCHING VISUAL DIRECTION & ASSET)
+    # =========================================================================
+    yield f"event: stage\ndata: {json.dumps({'stage': 'visual', 'status': 'running'})}\n\n"
+    await asyncio.sleep(0.4)
+
+    visual_prompt = f"Topic: {topic}\nAngle: {strategy_res.angle}\nHook: {chosen_hook}\nPlatform: {platform}"
+    visual_res: VisualDirection = await call_llm(
+        prompt=visual_prompt,
+        system_prompt=read_prompt("visual.md"),
+        response_model=VisualDirection,
+        stage_name="visual",
+        context_data={"topic": topic, "model_version": model_version}
+    )
+
+    decision_trail.append({
+        "agent": "Visual Director",
+        "decision": f"Style: {visual_res.style}",
+        "reason": visual_res.visual_rationale,
+        "timestamp": datetime.now(timezone.utc).isoformat()
+    })
+
+    yield f"event: stage\ndata: {json.dumps({'stage': 'visual', 'status': 'done', 'visual': visual_res.model_dump()})}\n\n"
+    await asyncio.sleep(0.2)
+
+    # =========================================================================
+    # STAGE 4: REPURPOSER (PARALLEL DISTRIBUTION FORMATS)
     # =========================================================================
     yield f"event: stage\ndata: {json.dumps({'stage': 'repurposing', 'status': 'running'})}\n\n"
     await asyncio.sleep(0.4)
@@ -179,7 +220,7 @@ async def execute_content_pipeline(
     await asyncio.sleep(0.2)
 
     # =========================================================================
-    # STAGE 4: PERSISTENCE & FINALIZATION
+    # STAGE 5: PERSISTENCE & FINALIZATION
     # =========================================================================
     features = extract_features(final_draft, default_format=strategy_res.format, default_topic=topic)
     
@@ -192,10 +233,14 @@ async def execute_content_pipeline(
         body=final_draft,
         status="draft",
         published_at=None,
+        scheduled_for=None,
+        image_url=visual_res.image_url,
+        image_prompt=visual_res.prompt,
         word_count=features["word_count"],
         hook_type=features["hook_type"],
         has_personal_story=features["has_personal_story"],
         has_code_example=features["has_code_example"],
+        decision_trail=decision_trail,
         created_at=datetime.now(timezone.utc)
     )
     session.add(post)
@@ -223,6 +268,7 @@ async def execute_content_pipeline(
         quality_score=final_review.overall if final_review else 8.0,
         retries=retries_count,
         latency_ms=latency,
+        decision_trail=decision_trail,
         created_at=datetime.now(timezone.utc)
     )
     session.add(gen_run)
@@ -251,8 +297,12 @@ async def execute_content_pipeline(
         "linkedin_post": repurposed.linkedin_post,
         "x_thread": repurposed.x_thread,
         "instagram_caption": repurposed.instagram_caption,
+        "image_url": visual_res.image_url,
+        "image_prompt": visual_res.prompt,
+        "visual": visual_res.model_dump(),
         "strategy": strategy_res.model_dump(),
         "review": final_review.model_dump() if final_review else None,
+        "decision_trail": decision_trail,
         "features": features
     }
     yield f"event: done\ndata: {json.dumps(final_payload)}\n\n"

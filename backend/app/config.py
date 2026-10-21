@@ -6,14 +6,19 @@ class Settings(BaseSettings):
     APP_NAME: str = "CreatorOS"
     DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./creatoros.db")
     
-    # LLM Settings
+    # Mesh API (Official Sponsor - Mandatory)
+    MESH_API_KEY: Optional[str] = os.getenv("MESH_API_KEY", None)
+    MESH_BASE_URL: str = os.getenv("MESH_BASE_URL", "https://api.meshapi.ai/v1")
+    MESH_MODEL: str = os.getenv("MESH_MODEL", "openai/gpt-4o")
+    
+    # Secondary / Alternative Keys
     GROQ_API_KEY: Optional[str] = os.getenv("GROQ_API_KEY", None)
     GROQ_MODEL: str = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
     OPENAI_API_KEY: Optional[str] = os.getenv("OPENAI_API_KEY", None)
     GEMINI_API_KEY: Optional[str] = os.getenv("GEMINI_API_KEY", None)
     
-    # LLM Provider selection: "mock", "gemini", "openai", "groq"
-    LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "auto")
+    # LLM Provider selection: "mesh" (default), "groq", "openai", "gemini", "mock"
+    LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "mesh")
     
     # Pinecone Vector Database
     PINECONE_API_KEY: Optional[str] = os.getenv("PINECONE_API_KEY", None)

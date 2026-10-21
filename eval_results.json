@@ -1,0 +1,134 @@
+{
+  "benchmark_timestamp": "2026-10-21T14:28:06Z",
+  "total_benchmark_topics": 5,
+  "execution_time_seconds": 31.22,
+  "editor_refinement_loop": {
+    "average_score_improvement": 2.0,
+    "average_hook_gain": 2.0,
+    "average_specificity_gain": 3.0,
+    "results": [
+      {
+        "topic": "AI Safety and Guardrails in Autonomous Multi-Agent Workflows",
+        "draft_1_score": 6.8,
+        "draft_2_score": 8.8,
+        "score_delta": 2.0,
+        "hook_gain": 2,
+        "specificity_gain": 3,
+        "code_added": true,
+        "word_count_before": 1977,
+        "word_count_after": 237
+      },
+      {
+        "topic": "Production RAG Chunking and Latency Optimization",
+        "draft_1_score": 6.8,
+        "draft_2_score": 8.8,
+        "score_delta": 2.0,
+        "hook_gain": 2,
+        "specificity_gain": 3,
+        "code_added": true,
+        "word_count_before": 107,
+        "word_count_after": 233
+      },
+      {
+        "topic": "Rewriting Celery Worker Queues to AsyncIO TaskGroups",
+        "draft_1_score": 6.8,
+        "draft_2_score": 8.8,
+        "score_delta": 2.0,
+        "hook_gain": 2,
+        "specificity_gain": 3,
+        "code_added": true,
+        "word_count_before": 109,
+        "word_count_after": 235
+      },
+      {
+        "topic": "Vector Database Indexing and Semantic Caching Traps",
+        "draft_1_score": 6.8,
+        "draft_2_score": 8.8,
+        "score_delta": 2.0,
+        "hook_gain": 2,
+        "specificity_gain": 3,
+        "code_added": true,
+        "word_count_before": 109,
+        "word_count_after": 235
+      },
+      {
+        "topic": "Replacing Framework Boilerplate with Native Typed Python",
+        "draft_1_score": 6.8,
+        "draft_2_score": 8.8,
+        "score_delta": 2.0,
+        "hook_gain": 2,
+        "specificity_gain": 3,
+        "code_added": true,
+        "word_count_before": 109,
+        "word_count_after": 235
+      }
+    ]
+  },
+  "closed_loop_learning": {
+    "average_quality_delta_v0_to_v2": 2.0,
+    "generic_titles_eliminated": "5/5",
+    "winning_pattern_adherence_rate": "100%",
+    "results": [
+      {
+        "topic": "AI Safety and Guardrails in Autonomous Multi-Agent Workflows",
+        "v0_angle": "An introductory guide covering the key principles of AI Safety and Guardrails in Autonomous Multi-Agent Workflows.",
+        "v2_angle": "I spent 3 weeks refactoring our AI Safety and Guardrails in Autonomous Multi-Agent Workflows workflow. Here is the unvarnished post-mortem, the $400 mistake we made, and the architecture that fixed it.",
+        "v0_score": 6.8,
+        "v2_score": 8.8,
+        "delta_score": 2.0,
+        "v0_is_generic_title": true,
+        "v2_is_generic_title": false,
+        "v2_has_personal_story": true,
+        "v2_has_code": true
+      },
+      {
+        "topic": "Production RAG Chunking and Latency Optimization",
+        "v0_angle": "An introductory guide covering the key principles of Production RAG Chunking and Latency Optimization.",
+        "v2_angle": "I spent 3 weeks refactoring our Production RAG Chunking and Latency Optimization workflow. Here is the unvarnished post-mortem, the $400 mistake we made, and the architecture that fixed it.",
+        "v0_score": 6.8,
+        "v2_score": 8.8,
+        "delta_score": 2.0,
+        "v0_is_generic_title": true,
+        "v2_is_generic_title": false,
+        "v2_has_personal_story": true,
+        "v2_has_code": true
+      },
+      {
+        "topic": "Rewriting Celery Worker Queues to AsyncIO TaskGroups",
+        "v0_angle": "An introductory guide covering the key principles of Rewriting Celery Worker Queues to AsyncIO TaskGroups.",
+        "v2_angle": "I spent 3 weeks refactoring our Rewriting Celery Worker Queues to AsyncIO TaskGroups workflow. Here is the unvarnished post-mortem, the $400 mistake we made, and the architecture that fixed it.",
+        "v0_score": 6.8,
+        "v2_score": 8.8,
+        "delta_score": 2.0,
+        "v0_is_generic_title": true,
+        "v2_is_generic_title": false,
+        "v2_has_personal_story": true,
+        "v2_has_code": true
+      },
+      {
+        "topic": "Vector Database Indexing and Semantic Caching Traps",
+        "v0_angle": "An introductory guide covering the key principles of Vector Database Indexing and Semantic Caching Traps.",
+        "v2_angle": "I spent 3 weeks refactoring our Vector Database Indexing and Semantic Caching Traps workflow. Here is the unvarnished post-mortem, the $400 mistake we made, and the architecture that fixed it.",
+        "v0_score": 6.8,
+        "v2_score": 8.8,
+        "delta_score": 2.0,
+        "v0_is_generic_title": true,
+        "v2_is_generic_title": false,
+        "v2_has_personal_story": true,
+        "v2_has_code": true
+      },
+      {
+        "topic": "Replacing Framework Boilerplate with Native Typed Python",
+        "v0_angle": "An introductory guide covering the key principles of Replacing Framework Boilerplate with Native Typed Python.",
+        "v2_angle": "I spent 3 weeks refactoring our Replacing Framework Boilerplate with Native Typed Python workflow. Here is the unvarnished post-mortem, the $400 mistake we made, and the architecture that fixed it.",
+        "v0_score": 6.8,
+        "v2_score": 8.8,
+        "delta_score": 2.0,
+        "v0_is_generic_title": true,
+        "v2_is_generic_title": false,
+        "v2_has_personal_story": true,
+        "v2_has_code": true
+      }
+    ]
+  }
+}
