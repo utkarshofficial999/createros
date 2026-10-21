@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+dist/
+.vite/
+venv/
+.venv/
+env/
+
+# Python Cache & Databases
+__pycache__/
+*.py[cod]
+*$py.class
+*.db
+*.sqlite
+creatoros.db
+.pytest_cache/
+
+# Environment Variables & Secrets
+.env
+.env.local
+
+# OS Files
+.DS_Store
+Thumbs.db
