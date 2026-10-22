@@ -1,0 +1,258 @@
+[
+  {
+    "id": "eval_01",
+    "topic": "Production RAG Chunking and Latency Optimization",
+    "niche": "AI Systems",
+    "difficulty": "hard",
+    "held_out_benchmark_score": 8.4,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_02",
+    "topic": "Rewriting Celery Worker Queues to Native AsyncIO TaskGroups",
+    "niche": "Backend Infrastructure",
+    "difficulty": "medium",
+    "held_out_benchmark_score": 8.7,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_03",
+    "topic": "Vector Database Indexing Traps and Salted Hash Cache Gotchas",
+    "niche": "Vector DBs",
+    "difficulty": "hard",
+    "held_out_benchmark_score": 8.2,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_04",
+    "topic": "Replacing Heavyweight Agent Frameworks with 120 Lines of Native Python",
+    "niche": "AI Agents",
+    "difficulty": "medium",
+    "held_out_benchmark_score": 8.9,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_05",
+    "topic": "Safeguarding Multi-Agent Autonomous Tool Calls with Pydantic Guardrails",
+    "niche": "AI Safety",
+    "difficulty": "hard",
+    "held_out_benchmark_score": 8.5,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_06",
+    "topic": "Database Connection Pooling Bottlenecks under 10k RPS in FastAPI",
+    "niche": "Backend Infrastructure",
+    "difficulty": "medium",
+    "held_out_benchmark_score": 7.8,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_07",
+    "topic": "Hybrid Dense-Sparse Search with BM25 vs Pure Cosine Similarity",
+    "niche": "RAG Systems",
+    "difficulty": "hard",
+    "held_out_benchmark_score": 8.1,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_08",
+    "topic": "The Cost of Token Hallucination Retries in Distributed LLM Workflows",
+    "niche": "AI Systems",
+    "difficulty": "medium",
+    "held_out_benchmark_score": 7.9,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_09",
+    "topic": "Designing Bounded In-Memory Message Buffers for Event-Driven Microservices",
+    "niche": "Distributed Systems",
+    "difficulty": "hard",
+    "held_out_benchmark_score": 8.3,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_10",
+    "topic": "Mitigating Thundering Herd Traffic on Redis Semantic Cache Evictions",
+    "niche": "Caching",
+    "difficulty": "hard",
+    "held_out_benchmark_score": 8.6,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_11",
+    "topic": "Why We Migrated from Managed Cloud Vector Stores to Local SQLite VSS",
+    "niche": "Edge AI",
+    "difficulty": "medium",
+    "held_out_benchmark_score": 8.8,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_12",
+    "topic": "Structuring Streaming SSE Endpoints with Zero-Downtime Worker Recovery",
+    "niche": "Backend Infrastructure",
+    "difficulty": "medium",
+    "held_out_benchmark_score": 7.7,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_13",
+    "topic": "Eliminating N+1 Queries in Async SQLAlchemy 2.0 Relationships",
+    "niche": "Databases",
+    "difficulty": "easy",
+    "held_out_benchmark_score": 7.5,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_14",
+    "topic": "Deterministic Schema Retry Protocols for Unreliable LLM JSON Outputs",
+    "niche": "AI Systems",
+    "difficulty": "medium",
+    "held_out_benchmark_score": 8.4,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_15",
+    "topic": "Container Cold-Start Elimination in Kubernetes-Based LLM Serving",
+    "niche": "DevOps / MLOps",
+    "difficulty": "hard",
+    "held_out_benchmark_score": 8.0,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_16",
+    "topic": "Context Compression Techniques that Cut RAG Prompt Costs by 54%",
+    "niche": "RAG Systems",
+    "difficulty": "medium",
+    "held_out_benchmark_score": 8.6,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_17",
+    "topic": "Optimizing SQLite Write-Ahead Logging (WAL) for High Concurrent Reads",
+    "niche": "Databases",
+    "difficulty": "medium",
+    "held_out_benchmark_score": 7.9,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_18",
+    "topic": "Dynamic Model Routing: Balancing gpt-4o Quality with gpt-4o-mini Latency",
+    "niche": "AI Gateways",
+    "difficulty": "medium",
+    "held_out_benchmark_score": 8.5,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_19",
+    "topic": "Handling Async Python CancelledError Gracefully in Long-Running Tasks",
+    "niche": "Python Internals",
+    "difficulty": "hard",
+    "held_out_benchmark_score": 8.2,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_20",
+    "topic": "Benchmarking Reranker Models: Cohere v3 vs Cross-Encoder MiniLM",
+    "niche": "Information Retrieval",
+    "difficulty": "medium",
+    "held_out_benchmark_score": 8.3,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_21",
+    "topic": "Why ThreadPoolExecutor Fails Silently under CPU-Bound Tokenization",
+    "niche": "Concurrency",
+    "difficulty": "hard",
+    "held_out_benchmark_score": 8.1,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_22",
+    "topic": "Implementing Token Bucket Rate Limiters in FastAPI with Zero Shared State",
+    "niche": "API Security",
+    "difficulty": "medium",
+    "held_out_benchmark_score": 7.6,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_23",
+    "topic": "Document Chunking Boundary Drift: The Hidden Cause of Retrieval Failures",
+    "niche": "RAG Systems",
+    "difficulty": "hard",
+    "held_out_benchmark_score": 8.7,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_24",
+    "topic": "Writing Deterministic Unit Tests for Probabilistic LLM Agent Decisions",
+    "niche": "Testing & QA",
+    "difficulty": "medium",
+    "held_out_benchmark_score": 8.4,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_25",
+    "topic": "How We Sliced Embedding Generation Times by 10x using ONNX Runtime",
+    "niche": "Performance Tuning",
+    "difficulty": "hard",
+    "held_out_benchmark_score": 8.8,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_26",
+    "topic": "Real-Time WebSocket Backpressure Management in Event Stream Dashboards",
+    "niche": "Frontend-Backend Architecture",
+    "difficulty": "medium",
+    "held_out_benchmark_score": 7.5,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_27",
+    "topic": "Memory Leaks in Long-Lived AsyncIO Tasks: Tracing Uncollected Coroutines",
+    "niche": "Python Profiling",
+    "difficulty": "hard",
+    "held_out_benchmark_score": 8.6,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_28",
+    "topic": "Why We Replaced Postgres Full-Text Search with Inverted Indexes in SQLite",
+    "niche": "Search Architecture",
+    "difficulty": "medium",
+    "held_out_benchmark_score": 7.9,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_29",
+    "topic": "Guardrails against Prompt Injection in Public-Facing Agent Tool Execution",
+    "niche": "AI Security",
+    "difficulty": "hard",
+    "held_out_benchmark_score": 8.7,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_30",
+    "topic": "Designing Human-in-the-Loop Reversible State Checkpoints in AI Pipelines",
+    "niche": "Workflow Automation",
+    "difficulty": "medium",
+    "held_out_benchmark_score": 8.2,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_31",
+    "topic": "Automated Cost Budgets for Autonomous Multi-Step Tool Calling Agents",
+    "niche": "FinOps / AI Infrastructure",
+    "difficulty": "medium",
+    "held_out_benchmark_score": 8.0,
+    "source": "Empirical engineering post-mortem dataset"
+  },
+  {
+    "id": "eval_32",
+    "topic": "Micro-Batching Optimization for Embedding Pipelines in Production",
+    "niche": "Data Ingestion",
+    "difficulty": "hard",
+    "held_out_benchmark_score": 8.3,
+    "source": "Empirical engineering post-mortem dataset"
+  }
+]

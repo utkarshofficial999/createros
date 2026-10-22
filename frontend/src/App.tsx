@@ -5,6 +5,8 @@ import { Editor } from './pages/Editor';
 import { Analytics } from './pages/Analytics';
 import { Learning } from './pages/Learning';
 import { Compare } from './pages/Compare';
+import { Architecture } from './pages/Architecture';
+import { AuditTrail } from './pages/AuditTrail';
 import { api, CreatorProfile, ModelRecord } from './lib/api';
 import { Sparkles, Terminal, Shield, GitCommit, Heart } from 'lucide-react';
 
@@ -13,6 +15,28 @@ export function App() {
   const [creator, setCreator] = useState<CreatorProfile | null>(null);
   const [activeModel, setActiveModel] = useState<ModelRecord | null>(null);
   const [latestGeneration, setLatestGeneration] = useState<any | null>(null);
+  const [theme, setTheme] = useState<'white' | 'dark'>(() => {
+    return (localStorage.getItem('creatoros_theme') as 'white' | 'dark') || 'white';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('creatoros_theme', theme);
+    if (theme === 'white') {
+      document.documentElement.classList.add('theme-white');
+      document.body.classList.add('theme-white');
+      document.documentElement.classList.remove('theme-dark');
+      document.body.classList.remove('theme-dark');
+    } else {
+      document.documentElement.classList.remove('theme-white');
+      document.body.classList.remove('theme-white');
+      document.documentElement.classList.add('theme-dark');
+      document.body.classList.add('theme-dark');
+    }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'white' ? 'dark' : 'white');
+  };
 
   useEffect(() => {
     loadInitialData();
@@ -43,13 +67,15 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0b0f17] text-slate-100 flex flex-col font-sans selection:bg-creator-accent selection:text-white">
+    <div className={`min-h-screen ${theme === 'white' ? 'theme-white bg-[#f8fafc] text-slate-900' : 'theme-dark bg-[#0b0f17] text-slate-100'} flex flex-col font-sans selection:bg-creator-accent selection:text-white transition-colors duration-200`}>
       {/* Navigation */}
       <Navbar
         currentTab={currentTab}
         setCurrentTab={setCurrentTab}
         creator={creator}
         activeModel={activeModel}
+        theme={theme}
+        onToggleTheme={toggleTheme}
       />
 
       {/* Main Screen Views */}
@@ -82,22 +108,30 @@ export function App() {
           />
         )}
 
+        {currentTab === 'audit' && (
+          <AuditTrail />
+        )}
+
         {currentTab === 'compare' && (
           <Compare
             activeModel={activeModel}
           />
         )}
+
+        {currentTab === 'architecture' && (
+          <Architecture />
+        )}
       </main>
 
       {/* Persistent Bottom Hackathon Demo Bar */}
-      <footer className="border-t border-slate-800/80 bg-slate-950/80 backdrop-blur-md py-4 px-6 text-xs text-slate-400">
+      <footer className="border-t border-slate-200/80 dark:border-slate-800/80 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md py-4 px-6 text-xs text-slate-500 dark:text-slate-400 transition-colors">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center space-x-3">
-            <span className="flex items-center space-x-1 font-mono text-slate-300">
-              <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <span className="flex items-center space-x-1.5 font-mono text-slate-700 dark:text-slate-300">
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
               <span>FastAPI Backend • Python Stats Engine • React SSE Frontend</span>
             </span>
-            <span className="text-slate-600">|</span>
+            <span className="text-slate-300 dark:text-slate-700">|</span>
             <span className="text-slate-500 font-mono">SQLite + SQLAlchemy</span>
           </div>
 
@@ -107,6 +141,13 @@ export function App() {
               className="text-creator-cyan hover:underline flex items-center space-x-1 font-mono font-bold"
             >
               <span>Demo Climax: Before / After</span>
+            </button>
+            <span className="text-slate-700">•</span>
+            <button
+              onClick={() => setCurrentTab('audit')}
+              className="hover:text-slate-200 transition-colors"
+            >
+              Audit Trail
             </button>
             <span className="text-slate-700">•</span>
             <button

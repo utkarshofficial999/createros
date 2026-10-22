@@ -131,6 +131,13 @@ async def simulate_engagement(post_id: int, db: AsyncSession = Depends(get_db)):
     if not post.published_at:
         post.published_at = datetime.now(timezone.utc)
 
+    # Link outcome score back to all audit decisions for this post
+    from backend.app.models import AuditDecision
+    audit_stmt = select(AuditDecision).where(AuditDecision.post_id == post_id)
+    linked_decisions = (await db.execute(audit_stmt)).scalars().all()
+    for d in linked_decisions:
+        d.outcome_score = sim_data["engagement_score"]
+
     await db.commit()
     await db.refresh(metric)
     return metric

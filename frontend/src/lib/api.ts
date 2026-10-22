@@ -94,6 +94,13 @@ export interface PostVersion {
   created_at: string;
 }
 
+export interface DecisionItem {
+  agent: string;
+  decision: string;
+  reason: string;
+  timestamp: string;
+}
+
 export interface PostItem {
   id: number;
   creator_id: number;
@@ -104,6 +111,10 @@ export interface PostItem {
   body: string;
   status: string;
   published_at?: string;
+  scheduled_for?: string;
+  image_url?: string;
+  image_prompt?: string;
+  decision_trail?: DecisionItem[];
   word_count: number;
   hook_type: string;
   has_personal_story: boolean;
@@ -235,6 +246,16 @@ export const api = {
     return res.json();
   },
 
+  async schedulePost(postId: number, minutesFromNow: number = 60): Promise<PostItem> {
+    const res = await fetch(`${API_BASE}/api/posts/${postId}/schedule`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ minutes_from_now: minutesFromNow }),
+    });
+    if (!res.ok) throw new Error("Failed to schedule post");
+    return res.json();
+  },
+
   async simulateEngagement(postId: number): Promise<MetricData> {
     const res = await fetch(`${API_BASE}/api/posts/${postId}/simulate-engagement`, {
       method: "POST",
@@ -278,4 +299,66 @@ export const api = {
     if (!res.ok) throw new Error("Failed to run comparison");
     return res.json();
   },
+
+  async getAuditDecisions(params?: {
+    run_id?: string;
+    post_id?: number;
+    agent?: string;
+    strategy_version?: number;
+  }): Promise<AuditDecisionRecord[]> {
+    const searchParams = new URLSearchParams();
+    if (params?.run_id) searchParams.set("run_id", params.run_id);
+    if (params?.post_id) searchParams.set("post_id", String(params.post_id));
+    if (params?.agent) searchParams.set("agent", params.agent);
+    if (params?.strategy_version !== undefined) searchParams.set("strategy_version", String(params.strategy_version));
+
+    const res = await fetch(`${API_BASE}/api/audit?${searchParams.toString()}`);
+    if (!res.ok) throw new Error("Failed to load audit decisions");
+    return res.json();
+  },
+
+  async explainPost(postId: number): Promise<ExplainOutputResponse> {
+    const res = await fetch(`${API_BASE}/api/audit/explain/${postId}`);
+    if (!res.ok) throw new Error("Failed to load explanation for post");
+    return res.json();
+  },
 };
+
+export interface AuditDecisionRecord {
+  id: number;
+  run_id: string;
+  post_id?: number | null;
+  agent: string;
+  model_used: string;
+  strategy_version: number;
+  applied_rules: string[];
+  inputs_summary?: string;
+  decision: string;
+  reason: string;
+  outcome_score?: number | null;
+  created_at: string;
+}
+
+export interface ExplainOutputResponse {
+  post_id: number;
+  title: string;
+  strategy_version: number;
+  applied_rules: Array<{
+    rule_id: string;
+    category?: string;
+    directive: string;
+    weight: number;
+    rationale: string;
+  }>;
+  decision_trail: AuditDecisionRecord[];
+  rag_sources: Array<{
+    id?: number;
+    title?: string;
+    format?: string;
+    engagement_score?: number;
+    similarity?: number;
+    excerpt?: string;
+  }>;
+  explanation: string;
+}
+

@@ -5,6 +5,7 @@ from backend.app.db import get_db
 from backend.app.models import CreatorModelRecord
 from backend.app.schemas import CompareRequest, CompareResponse, Strategy, Review
 from backend.app.services.llm import call_llm
+from backend.app.services.features import extract_features
 
 router = APIRouter(prefix="/api/compare", tags=["compare"])
 
@@ -78,11 +79,17 @@ async def compare_model_generations(req: CompareRequest, db: AsyncSession = Depe
         context_data={"topic": topic, "attempt": 2, "model_version": v_target}
     )
 
+    base_feat = extract_features(base_content, default_format=base_strat.format, default_topic=topic)
+    target_feat = extract_features(target_content, default_format=target_strat.format, default_topic=topic)
+
+    score_diff = round(target_review.overall - base_review.overall, 1)
+    word_diff = target_feat["word_count"] - base_feat["word_count"]
+
     differences_summary = [
-        f"Hook Angle: Changed from generic definition ('{base_strat.hooks[0][:40]}...') to high-converting personal story ('{target_strat.hooks[0][:40]}...')",
-        f"Quality Scorecard: Increased from {base_review.overall}/10 to {target_review.overall}/10 (+{round(target_review.overall - base_review.overall, 1)} pts)",
-        "Evidence Injection: Model v{v_target} incorporated concrete code block and specific latency metrics (+1.42x lift pattern)",
-        "Word Depth: Expanded from basic summary to comprehensive 800+ word engineering post-mortem"
+        f"Hook Angle: Changed from '{base_feat['hook_type']}' ('{base_strat.hooks[0][:40]}...') to high-engagement '{target_feat['hook_type']}' ('{target_strat.hooks[0][:40]}...')",
+        f"Quality Scorecard: Increased from {base_review.overall}/10 to {target_review.overall}/10 ({'+' if score_diff >= 0 else ''}{score_diff} pts)",
+        f"Evidence Injection: Code block detected = {target_feat['has_code_example']} (Base = {base_feat['has_code_example']}), Personal story = {target_feat['has_personal_story']} (Base = {base_feat['has_personal_story']})",
+        f"Content Depth: {target_feat['word_count']} words vs {base_feat['word_count']} words ({'+' if word_diff >= 0 else ''}{word_diff} words)"
     ]
 
     return CompareResponse(

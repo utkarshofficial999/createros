@@ -1,28 +1,28 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
   margin: 0;
   padding: 0;
-  background-color: #0b0f17;
-  color: #f1f5f9;
+  background-color: #f8fafc;
+  color: #0f172a;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
 }
 
-/* Glassmorphism helpers */
+/* Glassmorphism helpers for white/light theme */
 .glass-panel {
-  background: rgba(18, 24, 36, 0.75);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.02);
 }
 
 .glass-panel-hover {
@@ -30,8 +30,8 @@ body {
 }
 
 .glass-panel-hover:hover {
-  border-color: rgba(99, 102, 241, 0.4);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+  border-color: rgba(99, 102, 241, 0.5);
+  box-shadow: 0 12px 30px -4px rgba(15, 23, 42, 0.08);
 }
 
 /* Custom subtle scrollbar */
@@ -40,14 +40,14 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0b0f17;
+  background: #f1f5f9;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #cbd5e1;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #94a3b8;
 }
 
 @keyframes pulseGlow {
@@ -57,4 +57,132 @@ body {
 
 .animate-glow {
   animation: pulseGlow 3s infinite ease-in-out;
+}
+
+/* ========================================================================= */
+/* White Theme Adjustments & Element Overrides                              */
+/* ========================================================================= */
+
+body.theme-white,
+.theme-white {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+/* Headings and white text */
+.theme-white .text-white {
+  color: #0f172a !important;
+}
+
+/* Retain white text on solid colored buttons & badges */
+.theme-white button.bg-creator-accent,
+.theme-white button.bg-blue-600,
+.theme-white button.bg-sky-600,
+.theme-white button.bg-pink-600,
+.theme-white button.bg-emerald-600,
+.theme-white button.bg-indigo-600,
+.theme-white button[class*="from-creator-accent"],
+.theme-white button[class*="from-emerald-600"],
+.theme-white button[class*="from-indigo-600"],
+.theme-white button[class*="bg-gradient"],
+.theme-white [class*="bg-gradient"] > span.text-white,
+.theme-white [class*="bg-gradient"] > div > span.text-white {
+  color: #ffffff !important;
+}
+.theme-white button[class*="bg-gradient"] *,
+.theme-white button.bg-creator-accent * {
+  color: #ffffff !important;
+}
+
+/* Slate text levels */
+.theme-white .text-slate-100 {
+  color: #0f172a !important;
+}
+.theme-white .text-slate-200 {
+  color: #1e293b !important;
+}
+.theme-white .text-slate-300 {
+  color: #334155 !important;
+}
+.theme-white .text-slate-400 {
+  color: #64748b !important;
+}
+.theme-white .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+/* Backgrounds */
+.theme-white .bg-slate-950,
+.theme-white .bg-slate-950\/90,
+.theme-white .bg-slate-950\/80,
+.theme-white .bg-slate-950\/70 {
+  background-color: #f8fafc !important;
+}
+
+.theme-white .bg-slate-900,
+.theme-white .bg-slate-900\/90,
+.theme-white .bg-slate-900\/80,
+.theme-white .bg-slate-900\/70,
+.theme-white .bg-slate-900\/60,
+.theme-white .bg-slate-900\/40,
+.theme-white .bg-slate-900\/30 {
+  background-color: #ffffff !important;
+}
+
+.theme-white .bg-slate-800,
+.theme-white .bg-slate-800\/80,
+.theme-white .bg-slate-800\/60 {
+  background-color: #f1f5f9 !important;
+}
+
+.theme-white .bg-creator-dark {
+  background-color: #ffffff !important;
+}
+
+/* Borders */
+.theme-white .border-slate-800,
+.theme-white .border-slate-800\/80,
+.theme-white .border-slate-800\/40,
+.theme-white .border-slate-700,
+.theme-white .border-slate-700\/80,
+.theme-white .border-creator-border,
+.theme-white .border-creator-border\/80 {
+  border-color: #e2e8f0 !important;
+}
+
+/* Form controls (inputs, textareas, selects) */
+.theme-white input[type="text"],
+.theme-white input[type="search"],
+.theme-white textarea,
+.theme-white select {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+.theme-white input::placeholder,
+.theme-white textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Recharts grid lines in white theme */
+.theme-white .recharts-cartesian-grid line {
+  stroke: #e2e8f0 !important;
+}
+
+/* ========================================================================= */
+/* Dark Theme Mode (When user explicitly toggles to dark)                   */
+/* ========================================================================= */
+
+body.theme-dark,
+.theme-dark {
+  background-color: #0b0f17 !important;
+  color: #f1f5f9 !important;
+  color-scheme: dark;
+}
+
+.theme-dark .glass-panel {
+  background: rgba(18, 24, 36, 0.75) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4) !important;
 }

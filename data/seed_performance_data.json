@@ -1,0 +1,122 @@
+[
+  {
+    "title": "I spent 3 weeks refactoring our semantic chunking pipeline in production",
+    "topic_tag": "RAG Systems",
+    "platform": "linkedin",
+    "format": "story",
+    "body": "I built our team's first semantic chunking system three weeks ago, convinced it would solve our retrieval hallucination problem.\n\nInstead, latency jumped 4x and our vector database bill doubled overnight.\n\nHere is the raw architectural post-mortem and the 3 decisions that finally dropped retrieval errors by 68%:\n\n1. Fixed vs Semantic Chunking:\nWe thought semantic chunking based on sentence embeddings was the holy grail. But chunk boundary drift caused related functions to get sliced in half. We reverted to recursive character chunking (800 token target, 150 token overlap) with document hierarchy metadata prepended to each chunk.\n\n2. The Embedding Bottleneck:\nCalling OpenAI text-embedding-3-small on 500k chunks dynamically on ingest was burning 42 minutes per index run. Moving to local bge-small-en-v1.5 running on ONNX runtime sliced indexing time to 4.2 minutes.\n\n3. Reranking is 80% of the game:\nVector similarity alone retrieved superficially similar docstrings. Adding Cohere rerank-v3 as a secondary pass across top 25 candidates gave us the true quality jump.\n\n```python\nasync def retrieve_chunks(query: str, top_k: int = 5):\n    candidates = await vector_index.query(query, top_k=25)\n    return reranker.rank(query, candidates)[:top_k]\n```\n\nHave you tested hybrid search vs pure vector similarity in your production agents? What chunking size gave you the highest recall?",
+    "impressions": 14200,
+    "likes": 480,
+    "comments": 78,
+    "shares": 52,
+    "saves": 96
+  },
+  {
+    "title": "Why our engineering team deleted 8,000 lines of LangChain boilerplate",
+    "topic_tag": "AI Agents",
+    "platform": "linkedin",
+    "format": "story",
+    "body": "Six months ago, our codebase was suffocating under 4 different agent abstraction layers, custom memory wrappers, and endless prompt serialization bugs.\n\nLast Friday, we merged a PR that deleted 8,240 lines and replaced them with 480 lines of typed native Python.\n\nHere is what we learned migrating from heavyweight frameworks to native async primitives:\n\n1. Explicit state machines beat hidden agent loops:\nWhen an agent loops behind an abstract abstraction, debugging a failed tool call requires reading 8 stack frames of internal framework code. Using a typed Pydantic dataclass and an explicit while loop reduced our Mean-Time-To-Resolution from 2 hours to 8 minutes.\n\n2. Native structured outputs:\nWith modern model APIs offering native JSON Schema validation, you no longer need output parsers with 500-line regex fallback handlers.\n\n```python\nresponse = await client.chat.completions.create(\n    model='gpt-4o',\n    messages=history,\n    response_format={'type': 'json_object'}\n)\n```\n\n3. Observability is trivial when state is flat:\nWe log each transition directly to SQLite with timestamp and latency. No black-box telemetry dashboards needed.\n\nAre you keeping agent frameworks in your production stack or moving toward lightweight native orchestrators?",
+    "impressions": 16800,
+    "likes": 590,
+    "comments": 94,
+    "shares": 64,
+    "saves": 112
+  },
+  {
+    "title": "What is Retrieval-Augmented Generation (RAG)? A Beginner Guide",
+    "topic_tag": "RAG Systems",
+    "platform": "linkedin",
+    "format": "tutorial",
+    "body": "Have you wondered how LLMs access private organizational data? The answer is RAG.\n\nRAG stands for Retrieval-Augmented Generation. It combines information retrieval with text generation.\n\nThe process works in three basic steps:\n1. Ingestion: Documents are converted into vector embeddings.\n2. Retrieval: Relevant passages are fetched based on semantic similarity.\n3. Generation: The LLM answers the prompt using retrieved passages as context.\n\nRAG helps reduce hallucinations and ensures up-to-date knowledge across modern organizations.\n\nWhat are your thoughts on RAG? Leave a comment below!",
+    "impressions": 8400,
+    "likes": 98,
+    "comments": 8,
+    "shares": 4,
+    "saves": 6
+  },
+  {
+    "title": "Introduction to Vector Databases and Cosine Similarity",
+    "topic_tag": "Vector DBs",
+    "platform": "linkedin",
+    "format": "tutorial",
+    "body": "Vector databases have gained immense popularity recently. But how do they work?\n\nEmbeddings represent textual or multimodal data as arrays of floating-point numbers in high-dimensional space.\n\nCosine similarity measures the angle between two vectors to determine their semantic relationship.\n\nPopular vector databases include Pinecone, Qdrant, Chroma, and pgvector. They are essential for modern AI applications.\n\nLet me know if you would like a tutorial on setting up a vector database in the comments below!",
+    "impressions": 6200,
+    "likes": 74,
+    "comments": 5,
+    "shares": 3,
+    "saves": 4
+  },
+  {
+    "title": "We benchmarked Celery vs AsyncIO TaskGroups across 1,000,000 AI jobs",
+    "topic_tag": "Backend Architecture",
+    "platform": "linkedin",
+    "format": "story",
+    "body": "We spent 2 weeks benchmarking Celery + Redis against native Python AsyncIO TaskGroups across 1M concurrent LLM inference routing tasks.\n\nHere are the raw benchmark results and the architecture tradeoffs:\n\n- Celery + Redis Worker Setup:\nThroughput: 1,420 req/sec\np99 Latency: 420ms (Redis broker queue serialization overhead)\nMemory Footprint: 2.4 GB across 16 worker processes\n\n- Native Python 3.11 AsyncIO TaskGroups:\nThroughput: 4,890 req/sec (+244% increase)\np99 Latency: 48ms (-88% reduction)\nMemory Footprint: 380 MB\n\n```python\nasync def process_batch(items: list[Job]):\n    async with asyncio.TaskGroup() as tg:\n        tasks = [tg.create_task(run_job(job)) for job in items]\n    return [t.result() for t in tasks]\n```\n\nThe takeaway: For IO-bound LLM gateway routing, separate worker process overhead costs more than it saves. Keep IO in-process with bounded asyncio semaphores.\n\nWhat is your team's stance on worker queues vs native async for LLM pipelines?",
+    "impressions": 18400,
+    "likes": 640,
+    "comments": 108,
+    "shares": 72,
+    "saves": 138
+  },
+  {
+    "title": "5 Tips for Writing Better Python Code",
+    "topic_tag": "Software Engineering",
+    "platform": "linkedin",
+    "format": "tutorial",
+    "body": "Writing clean Python code is an important skill for any developer.\n\nHere are 5 tips:\n1. Use descriptive variable names.\n2. Follow PEP 8 style guidelines.\n3. Write modular functions that do one thing well.\n4. Use list comprehensions when appropriate.\n5. Write docstrings and type hints.\n\nFollowing these tips will make your codebase much easier to maintain.\n\nWhich tip is your favorite? Share below!",
+    "impressions": 5400,
+    "likes": 62,
+    "comments": 6,
+    "shares": 2,
+    "saves": 5
+  },
+  {
+    "title": "The $400 caching bug that crashed our vector search cluster",
+    "topic_tag": "Vector DBs",
+    "platform": "linkedin",
+    "format": "story",
+    "body": "At 2:15 AM last Tuesday, our vector database bill spiked by $400 in 3 hours because of a 4-line caching error.\n\nHere is the bug post-mortem:\n\nWe implemented what we thought was an intelligent semantic cache. If a user query had cosine similarity > 0.94 with a prior query, we served cached embeddings.\n\nHere was the mistake in our cache key hashing:\n```python\n# The Bug:\ncache_key = f\"{user_id}_{hash(query.strip().lower())}\"\n```\n\nIn Python, hash() is salted per process restart. Every time our ECS autoscaler spawned a container, the hash seed randomized. Queries missed cache 100% of the time, triggering a thundering herd of re-embeddings that overwhelmed our API quota.\n\nThe Fix:\nUse deterministic SHA-256 with query canonicalization:\n```python\ncache_key = hashlib.sha256(canonicalize(query).encode()).hexdigest()\n```\n\nAlways verify that your cache keys survive multi-process restarts. What was your team's most expensive production gotcha?",
+    "impressions": 15600,
+    "likes": 510,
+    "comments": 82,
+    "shares": 56,
+    "saves": 104
+  },
+  {
+    "title": "Understanding Artificial Intelligence and Machine Learning Fundamentals",
+    "topic_tag": "AI Fundamentals",
+    "platform": "linkedin",
+    "format": "tutorial",
+    "body": "Artificial Intelligence is transforming every sector. But what is the difference between AI, ML, and Deep Learning?\n\n- AI: Any technique that enables computers to mimic human behavior.\n- Machine Learning: A subset of AI using statistical techniques to learn from data.\n- Deep Learning: A subset of ML composed of multi-layer neural networks.\n\nUnderstanding these foundations is key to building modern systems.\n\nDo you work in AI? Let me know your thoughts!",
+    "impressions": 4800,
+    "likes": 52,
+    "comments": 4,
+    "shares": 1,
+    "saves": 3
+  },
+  {
+    "title": "Why we stopped using LangGraph and built our own 120-line state graph",
+    "topic_tag": "AI Agents",
+    "platform": "linkedin",
+    "format": "story",
+    "body": "Our multi-agent system required human-in-the-loop approvals, step checkpoints, and state rollbacks.\n\nAfter fighting library version mismatches and complex checkpoint serializer bugs, we built an explicit typed state machine in 120 lines of pure Python.\n\nKey architectural decisions:\n1. State is an immutable Pydantic model.\n2. Nodes are pure async functions `f(state) -> state`.\n3. Transitions are validated by an explicit transition table.\n\n```python\nclass Workflow:\n    def __init__(self, transitions: dict):\n        self.transitions = transitions\n    \n    async def step(self, state: State, action: str) -> State:\n        next_node = self.transitions[state.current_stage][action]\n        return await next_node(state)\n```\n\nZero dependencies. 100% testable with pytest. Full visibility in 10 minutes.\n\nHave you rolled your own orchestration loop or do you prefer managed agent frameworks?",
+    "impressions": 17200,
+    "likes": 612,
+    "comments": 96,
+    "shares": 68,
+    "saves": 124
+  },
+  {
+    "title": "How to Use SQLite in Python with SQLAlchemy",
+    "topic_tag": "Backend Architecture",
+    "platform": "linkedin",
+    "format": "tutorial",
+    "body": "SQLite is a lightweight relational database built into Python standard library. Combined with SQLAlchemy, it provides a powerful ORM layer.\n\nTo get started, install SQLAlchemy:\npip install sqlalchemy\n\nCreate your engine:\nengine = create_engine('sqlite:///app.db')\n\nDefine your models using DeclarativeBase and start persisting records.\n\nIt is great for prototyping and local development projects.\n\nDo you use SQLite or PostgreSQL for local development?",
+    "impressions": 5100,
+    "likes": 58,
+    "comments": 5,
+    "shares": 2,
+    "saves": 4
+  }
+]

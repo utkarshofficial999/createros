@@ -103,26 +103,26 @@ export const Analytics: React.FC<AnalyticsProps> = ({ onRelearnRequested }) => {
   return (
     <div className="max-w-7xl mx-auto space-y-8 pb-12">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-slate-200/60 dark:border-slate-800/60">
         <div>
-          <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-creator-cyan mb-1">
+          <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-creator-cyan mb-1">
             <BarChart3 className="w-4 h-4" />
             <span>Deterministic Performance Engine • Pure Python</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">
+          <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             Seeded Analytics & Feature Lift Matrix
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
             Real statistical calculations (Likes × 1 + Comments × 4 + Shares × 6 + Saves × 5) normalized by impressions.
           </p>
         </div>
 
         {/* Simulate Live Engagement Action Button */}
-        <div className="flex items-center space-x-3 bg-slate-900 p-2.5 rounded-2xl border border-slate-800">
+        <div className="flex items-center space-x-3 bg-white dark:bg-slate-900 p-2.5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <select
             value={selectedPostId || ''}
             onChange={(e) => setSelectedPostId(Number(e.target.value))}
-            className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white max-w-xs truncate focus:outline-none"
+            className="px-3 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white max-w-xs truncate focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
           >
             {posts.map((p) => (
               <option key={p.id} value={p.id}>

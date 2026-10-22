@@ -44,16 +44,16 @@ export const Compare: React.FC<CompareProps> = ({ activeModel }) => {
   return (
     <div className="max-w-7xl mx-auto space-y-8 pb-12">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-slate-200/60 dark:border-slate-800/60">
         <div>
-          <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-creator-cyan mb-1">
+          <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-creator-cyan mb-1">
             <GitCompare className="w-4 h-4" />
             <span>The Hero Demo • Proving The Core Thesis</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">
+          <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             Before vs After Analytics Learning
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
             The exact same prompt processed before and after learning. See how honest data transforms sterile advice into high-converting engineering stories.
           </p>
         </div>

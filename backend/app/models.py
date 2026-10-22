@@ -49,12 +49,13 @@ class Post(Base):
     image_prompt = Column(Text, nullable=True)
     scheduled_for = Column(DateTime(timezone=True), nullable=True)
     decision_trail = Column(JSON, default=list)
+    repurposed_content = Column(JSON, default=dict)
 
     created_at = Column(DateTime(timezone=True), default=utc_now)
 
     creator = relationship("Creator", back_populates="posts")
-    versions = relationship("PostVersion", back_populates="post", cascade="all, delete-orphan", order_by="PostVersion.version_number")
-    metric = relationship("Metric", back_populates="post", uselist=False, cascade="all, delete-orphan")
+    versions = relationship("PostVersion", back_populates="post", cascade="all, delete-orphan", order_by="PostVersion.version_number", lazy="selectin")
+    metric = relationship("Metric", back_populates="post", uselist=False, cascade="all, delete-orphan", lazy="selectin")
 
 
 class PostVersion(Base):
@@ -117,3 +118,35 @@ class GenerationRun(Base):
     created_at = Column(DateTime(timezone=True), default=utc_now)
 
     creator = relationship("Creator", back_populates="generation_runs")
+
+
+class AuditDecision(Base):
+    __tablename__ = "audit_decisions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    run_id = Column(String(50), nullable=False, index=True)
+    post_id = Column(Integer, ForeignKey("posts.id", ondelete="SET NULL"), nullable=True, index=True)
+    agent = Column(String(50), nullable=False)  # "Strategist", "Writer", "Critic", "Analyst", "Visual", "Repurposer"
+    model_used = Column(String(100), nullable=False)  # via Mesh API e.g. openai/gpt-4o
+    strategy_version = Column(Integer, default=1)
+    applied_rules = Column(JSON, default=list)  # ["RULE-STORY-01", "RULE-CODE-02"]
+    inputs_summary = Column(Text, nullable=True)
+    decision = Column(Text, nullable=False)
+    reason = Column(Text, nullable=False)
+    outcome_score = Column(Float, nullable=True)
+    created_at = Column(DateTime(timezone=True), default=utc_now)
+
+
+class EvalRunRecord(Base):
+    __tablename__ = "eval_runs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    run_id = Column(String(50), unique=True, index=True)
+    benchmark_name = Column(String(100), nullable=False)
+    total_items = Column(Integer, default=0)
+    baseline_score = Column(Float, default=0.0)
+    learned_score = Column(Float, default=0.0)
+    score_delta = Column(Float, default=0.0)
+    win_rate = Column(Float, default=0.0)
+    results_json = Column(JSON, nullable=False)
+    created_at = Column(DateTime(timezone=True), default=utc_now)

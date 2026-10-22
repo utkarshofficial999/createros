@@ -84,16 +84,16 @@ export const Learning: React.FC<LearningProps> = ({
   return (
     <div className="max-w-7xl mx-auto space-y-8 pb-12">
       {/* Header & Re-learn Action */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-slate-200/60 dark:border-slate-800/60">
         <div>
-          <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-creator-cyan mb-1">
+          <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-creator-cyan mb-1">
             <BrainCircuit className="w-4 h-4" />
             <span>Self-Optimizing Strategy Brain • Active Model v{activeModel.version}</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">
+          <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             Creator Model & Pattern Rules
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
             Synthesized directly from deterministic engagement lift metrics. Zero hallucinated rules.
           </p>
         </div>

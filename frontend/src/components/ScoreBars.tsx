@@ -26,23 +26,23 @@ export const ScoreBars: React.FC<ScoreBarsProps> = ({ review }) => {
   };
 
   return (
-    <div className="glass-panel rounded-2xl p-5 border border-creator-border shadow-xl space-y-4">
+    <div className="bg-white dark:glass-panel rounded-2xl p-5 border border-slate-200 dark:border-creator-border shadow-md dark:shadow-xl space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+      <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
         <div className="flex items-center space-x-2">
           {isPassing ? (
-            <ShieldCheck className="w-5 h-5 text-emerald-400" />
+            <ShieldCheck className="w-5 h-5 text-emerald-500" />
           ) : (
-            <AlertTriangle className="w-5 h-5 text-amber-400" />
+            <AlertTriangle className="w-5 h-5 text-amber-500" />
           )}
-          <h4 className="text-sm font-bold text-white tracking-wide">
+          <h4 className="text-sm font-bold text-slate-900 dark:text-white tracking-wide">
             Quality Gate Scorecard
           </h4>
         </div>
         <div className="flex items-center space-x-2">
-          <span className="text-xs text-slate-400">Overall:</span>
+          <span className="text-xs text-slate-500 dark:text-slate-400">Overall:</span>
           <span className={`px-2.5 py-1 rounded-lg text-sm font-extrabold font-mono ${
-            isPassing ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
+            isPassing ? 'bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30' : 'bg-rose-50 dark:bg-rose-500/20 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-500/30'
           }`}>
             {review.overall.toFixed(1)} / 10
           </span>
@@ -54,10 +54,10 @@ export const ScoreBars: React.FC<ScoreBarsProps> = ({ review }) => {
         {metrics.map((m) => (
           <div key={m.label} className="space-y-1">
             <div className="flex justify-between items-center text-xs">
-              <span className="font-medium text-slate-300">{m.label}</span>
-              <span className="font-mono font-bold text-slate-300">{m.score}/10</span>
+              <span className="font-medium text-slate-700 dark:text-slate-300">{m.label}</span>
+              <span className="font-mono font-bold text-slate-800 dark:text-slate-300">{m.score}/10</span>
             </div>
-            <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+            <div className="w-full h-2 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all duration-500 ${getColor(m.score).split(' ')[0]}`}
                 style={{ width: `${(m.score / 10) * 100}%` }}
@@ -69,14 +69,14 @@ export const ScoreBars: React.FC<ScoreBarsProps> = ({ review }) => {
 
       {/* Reviewer Feedback Notes */}
       {review.feedback && review.feedback.length > 0 && (
-        <div className="pt-3 border-t border-slate-800/80">
-          <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">
+        <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80">
+          <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
             Reviewer Critique & Polish:
           </p>
           <ul className="space-y-1.5">
             {review.feedback.map((item, idx) => (
-              <li key={idx} className="text-xs text-slate-300 flex items-start space-x-2">
-                <span className="text-creator-cyan font-bold">•</span>
+              <li key={idx} className="text-xs text-slate-600 dark:text-slate-300 flex items-start space-x-2">
+                <span className="text-indigo-600 dark:text-creator-cyan font-bold">•</span>
                 <span>{item}</span>
               </li>
             ))}

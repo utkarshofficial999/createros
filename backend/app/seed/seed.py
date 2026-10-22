@@ -94,6 +94,29 @@ async def seed_database(reset: bool = False):
 
             published_date = now - timedelta(days=(len(raw_posts) - idx) * 2)
 
+            sample_image = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80"
+            sample_prompt = f"Isometric 3D architectural blueprint of {item['topic_tag']} with glowing cyan data pipelines and dark server nodes, octane render"
+            trail = [
+                {
+                    "agent": "Strategist",
+                    "decision": f"Selected format '{features['format']}' with '{features['hook_type']}' hook",
+                    "reason": "Aligned with historical engagement lift and creator engineering audience preferences.",
+                    "timestamp": published_date.isoformat()
+                },
+                {
+                    "agent": "Editor",
+                    "decision": "Quality Gate passed (Score: 8.4/10)",
+                    "reason": "Strong technical clarity, concise hook, and actionable engineering takeaways.",
+                    "timestamp": published_date.isoformat()
+                },
+                {
+                    "agent": "Visual Director",
+                    "decision": "Style: Isometric 3D Architecture Blueprint",
+                    "reason": "High stopping power in technical social feeds, reinforces system credibility.",
+                    "timestamp": published_date.isoformat()
+                }
+            ]
+
             post = Post(
                 id=item["id"],
                 creator_id=creator.id,
@@ -108,6 +131,9 @@ async def seed_database(reset: bool = False):
                 hook_type=features["hook_type"],
                 has_personal_story=features["has_personal_story"],
                 has_code_example=features["has_code_example"],
+                image_url=sample_image,
+                image_prompt=sample_prompt,
+                decision_trail=trail,
                 created_at=published_date
             )
             session.add(post)
@@ -180,9 +206,34 @@ async def seed_database(reset: bool = False):
                     "confidence": item["confidence"]
                 })
 
+        rules = [
+            {
+                "rule_id": "RULE-STORY-01",
+                "category": "format",
+                "directive": "Lead with personal build narratives and vulnerability ('I built...', 'I broke...') to capture attention.",
+                "weight": 2.45,
+                "rationale": "Empirical 2.45x engagement lift across engineering post-mortems."
+            },
+            {
+                "rule_id": "RULE-CODE-02",
+                "category": "evidence",
+                "directive": "Mandate runnable Python code examples and quantitative latency benchmarks.",
+                "weight": 1.68,
+                "rationale": "Drives developer saves and bookmarking behavior (+1.68x lift)."
+            },
+            {
+                "rule_id": "RULE-NO-DEF-03",
+                "category": "hook",
+                "directive": "Eliminate dictionary definitions ('What is X?') from hooks; replace with real metrics or latency deltas.",
+                "weight": 0.42,
+                "rationale": "High-level definitions result in 0.42x lift penalty."
+            }
+        ]
+
         v1_model_data = {
             "winning_patterns": winning,
             "losing_patterns": losing,
+            "rules": rules,
             "preferred_topics": ["AI Engineering", "Backend Architecture", "Production Failures"],
             "avoid_topics": ["Generic Tutorials", "Basic Concept Definitions", "High-level Overviews"],
             "voice": {

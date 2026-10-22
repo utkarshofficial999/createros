@@ -1,7 +1,16 @@
+import sys
+from pathlib import Path
+
+# Ensure root directory is on sys.path
+root_dir = Path(__file__).resolve().parent.parent.parent
+if str(root_dir) not in sys.path:
+    sys.path.insert(0, str(root_dir))
+
 import pytest
 import asyncio
 from httpx import AsyncClient, ASGITransport
 from backend.app.main import app
+from backend.app.seed.seed import seed_database
 from backend.app.services.features import extract_features
 from backend.app.services.stats import calculate_engagement_score, compute_lift_and_confidence, analyze_post_performance
 
@@ -31,6 +40,7 @@ def test_stats_math():
 
 @pytest.mark.asyncio
 async def test_api_endpoints():
+    await seed_database(reset=True)
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         # Health
@@ -67,3 +77,66 @@ async def test_api_endpoints():
         assert res.status_code == 200
         comp = res.json()
         assert len(comp["differences_summary"]) > 0
+
+        # Posts List & Detail (Visual + Decision Trail)
+        res = await client.get("/api/posts")
+        assert res.status_code == 200
+        posts = res.json()
+        assert len(posts) >= 20
+        first_post_id = posts[0]["id"]
+
+        res = await client.get(f"/api/posts/{first_post_id}")
+        assert res.status_code == 200
+        post_detail = res.json()
+        assert "decision_trail" in post_detail
+        assert post_detail["image_url"] is not None
+
+        # Post Scheduling (APScheduler integration)
+        res = await client.post(f"/api/posts/{first_post_id}/schedule", json={"minutes_from_now": 30})
+        assert res.status_code == 200
+        scheduled = res.json()
+        assert scheduled["status"] == "scheduled"
+        assert scheduled["scheduled_for"] is not None
+
+        # Re-learn from Analytics (Model v1 -> v2)
+        res = await client.post("/api/learning/relearn")
+        assert res.status_code == 200
+        new_model = res.json()
+        assert new_model["version"] >= 2
+        assert len(new_model["model"]["rules"]) > 0
+
+        # Real Performance Ingestion API
+        ingest_payload = {
+            "posts": [
+                {
+                    "title": "Production AsyncIO TaskGroup Migration",
+                    "body": "I spent 3 weeks rewriting our worker queues in production. Latency dropped by 88%.\n\n```python\nasync def run(): pass\n```",
+                    "topic_tag": "Backend Architecture",
+                    "platform": "linkedin",
+                    "impressions": 12000,
+                    "likes": 400,
+                    "comments": 60,
+                    "shares": 40,
+                    "saves": 80
+                }
+            ]
+        }
+        res = await client.post("/api/analytics/ingest", json=ingest_payload)
+        assert res.status_code == 200
+        ingest_res = res.json()
+        assert ingest_res["ingested_count"] == 1
+        assert ingest_res["total_posts"] > 20
+
+        # Audit Decisions Trail
+        res = await client.get("/api/audit")
+        assert res.status_code == 200
+        decisions = res.json()
+        assert len(decisions) > 0
+
+        # Explain This Output Feature
+        res = await client.get(f"/api/audit/explain/{first_post_id}")
+        assert res.status_code == 200
+        explanation = res.json()
+        assert explanation["post_id"] == first_post_id
+        assert "explanation" in explanation
+        assert len(explanation["explanation"]) > 20

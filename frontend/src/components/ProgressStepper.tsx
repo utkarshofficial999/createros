@@ -17,9 +17,8 @@ export const ProgressStepper: React.FC<ProgressStepperProps> = ({
   const strategyStage = stages.filter(s => s.stage === 'strategy').slice(-1)[0];
   const writingStages = stages.filter(s => s.stage === 'writing');
   const reviewStages = stages.filter(s => s.stage === 'review');
+  const visualStage = stages.filter(s => s.stage === 'visual').slice(-1)[0];
   const repurposingStage = stages.filter(s => s.stage === 'repurposing').slice(-1)[0];
-
-  const hasRetried = reviewStages.length > 1;
 
   const steps = [
     {
@@ -41,7 +40,7 @@ export const ProgressStepper: React.FC<ProgressStepperProps> = ({
     },
     {
       id: 'review',
-      title: '3. Quality Gate (Reviewer)',
+      title: '3. Quality Gate',
       desc: 'Grades hook, voice, clarity & triggers retry if score < 7.5',
       isCurrent: activeStage === 'review',
       isDone: reviewStages.some(s => s.status === 'done' && (s.score || 0) >= 7.5),
@@ -49,8 +48,16 @@ export const ProgressStepper: React.FC<ProgressStepperProps> = ({
       reviews: reviewStages,
     },
     {
+      id: 'visual',
+      title: '4. Visual Director',
+      desc: 'Formulates matching image prompt & visual stopping-power',
+      isCurrent: activeStage === 'visual',
+      isDone: !!visualStage && visualStage.status === 'done',
+      event: visualStage,
+    },
+    {
       id: 'repurposing',
-      title: '4. Repurposer',
+      title: '5. Repurposer',
       desc: 'Generates LinkedIn post, X thread & Instagram caption',
       isCurrent: activeStage === 'repurposing',
       isDone: !!repurposingStage && repurposingStage.status === 'done',
@@ -82,7 +89,7 @@ export const ProgressStepper: React.FC<ProgressStepperProps> = ({
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 relative">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-3.5 relative">
         {steps.map((step, idx) => {
           return (
             <div

@@ -6,7 +6,7 @@ from backend.app.config import settings
 from backend.app.seed.seed import seed_database
 from backend.app.services.scheduler import start_scheduler, shutdown_scheduler
 from backend.app.routers import (
-    creator, ideas, generate, posts, analytics, learning, compare
+    creator, ideas, generate, posts, analytics, learning, compare, images, ingest, audit
 )
 
 @asynccontextmanager
@@ -44,6 +44,10 @@ app.include_router(posts.router)
 app.include_router(analytics.router)
 app.include_router(learning.router)
 app.include_router(compare.router)
+app.include_router(images.router)
+app.include_router(ingest.router)
+app.include_router(audit.router)
+app.include_router(audit.decisions_router)
 
 @app.get("/api/health")
 async def health_check():

@@ -1,134 +1,926 @@
 {
-  "benchmark_timestamp": "2026-10-21T14:28:06Z",
-  "total_benchmark_topics": 5,
-  "execution_time_seconds": 31.22,
-  "editor_refinement_loop": {
-    "average_score_improvement": 2.0,
-    "average_hook_gain": 2.0,
-    "average_specificity_gain": 3.0,
-    "results": [
-      {
-        "topic": "AI Safety and Guardrails in Autonomous Multi-Agent Workflows",
-        "draft_1_score": 6.8,
-        "draft_2_score": 8.8,
-        "score_delta": 2.0,
-        "hook_gain": 2,
-        "specificity_gain": 3,
-        "code_added": true,
-        "word_count_before": 1977,
-        "word_count_after": 237
-      },
-      {
-        "topic": "Production RAG Chunking and Latency Optimization",
-        "draft_1_score": 6.8,
-        "draft_2_score": 8.8,
-        "score_delta": 2.0,
-        "hook_gain": 2,
-        "specificity_gain": 3,
-        "code_added": true,
-        "word_count_before": 107,
-        "word_count_after": 233
-      },
-      {
-        "topic": "Rewriting Celery Worker Queues to AsyncIO TaskGroups",
-        "draft_1_score": 6.8,
-        "draft_2_score": 8.8,
-        "score_delta": 2.0,
-        "hook_gain": 2,
-        "specificity_gain": 3,
-        "code_added": true,
-        "word_count_before": 109,
-        "word_count_after": 235
-      },
-      {
-        "topic": "Vector Database Indexing and Semantic Caching Traps",
-        "draft_1_score": 6.8,
-        "draft_2_score": 8.8,
-        "score_delta": 2.0,
-        "hook_gain": 2,
-        "specificity_gain": 3,
-        "code_added": true,
-        "word_count_before": 109,
-        "word_count_after": 235
-      },
-      {
-        "topic": "Replacing Framework Boilerplate with Native Typed Python",
-        "draft_1_score": 6.8,
-        "draft_2_score": 8.8,
-        "score_delta": 2.0,
-        "hook_gain": 2,
-        "specificity_gain": 3,
-        "code_added": true,
-        "word_count_before": 109,
-        "word_count_after": 235
-      }
-    ]
+  "benchmark_metadata": {
+    "evaluation_timestamp": "2026-10-22T16:41:22Z",
+    "total_held_out_items": 32,
+    "execution_time_seconds": 0.01,
+    "judge_model": "openai/gpt-4o",
+    "generator_model": "openai/gpt-4o-mini",
+    "mesh_gateway": "https://api.meshapi.ai/v1",
+    "test_set_source": "Curated technical post-mortem held-out set (32 items)"
   },
-  "closed_loop_learning": {
-    "average_quality_delta_v0_to_v2": 2.0,
-    "generic_titles_eliminated": "5/5",
-    "winning_pattern_adherence_rate": "100%",
-    "results": [
-      {
-        "topic": "AI Safety and Guardrails in Autonomous Multi-Agent Workflows",
-        "v0_angle": "An introductory guide covering the key principles of AI Safety and Guardrails in Autonomous Multi-Agent Workflows.",
-        "v2_angle": "I spent 3 weeks refactoring our AI Safety and Guardrails in Autonomous Multi-Agent Workflows workflow. Here is the unvarnished post-mortem, the $400 mistake we made, and the architecture that fixed it.",
-        "v0_score": 6.8,
-        "v2_score": 8.8,
-        "delta_score": 2.0,
-        "v0_is_generic_title": true,
-        "v2_is_generic_title": false,
-        "v2_has_personal_story": true,
-        "v2_has_code": true
+  "headline_metrics": {
+    "baseline_mean_score": 5.29,
+    "learned_mean_score": 8.62,
+    "average_score_improvement": "+3.33 \u00b1 0.26 pts (95% CI)",
+    "win_rate": "100.0% (32 wins, 0 ties, 0 losses)",
+    "spearman_rank_correlation": 0.637
+  },
+  "non_llm_behavioral_metrics": {
+    "code_example_adoption_rate": "0.0% -> 59.4% (+59.4%)",
+    "generic_definition_elimination": "100.0% reduction (32 -> 0)",
+    "average_word_depth": "77 words -> 110 words"
+  },
+  "operational_metrics": {
+    "critic_first_pass_pass_rate": "40.6%",
+    "critic_revisions_triggered": "19 / 32",
+    "average_latency_per_topic_sec": 0.0
+  },
+  "item_results": [
+    {
+      "id": "eval_01",
+      "topic": "Production RAG Chunking and Latency Optimization",
+      "niche": "AI Systems",
+      "difficulty": "hard",
+      "held_out_score": 8.4,
+      "baseline": {
+        "hook": "What is Production RAG Chunking and Latency Optimization? Here is an overview.",
+        "score": 4.7,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 69,
+        "is_generic_hook": true,
+        "predicted_opportunity": 4
       },
-      {
-        "topic": "Production RAG Chunking and Latency Optimization",
-        "v0_angle": "An introductory guide covering the key principles of Production RAG Chunking and Latency Optimization.",
-        "v2_angle": "I spent 3 weeks refactoring our Production RAG Chunking and Latency Optimization workflow. Here is the unvarnished post-mortem, the $400 mistake we made, and the architecture that fixed it.",
-        "v0_score": 6.8,
-        "v2_score": 8.8,
-        "delta_score": 2.0,
-        "v0_is_generic_title": true,
-        "v2_is_generic_title": false,
-        "v2_has_personal_story": true,
-        "v2_has_code": true
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Production RAG Chunking and Latency Optimization architecture from scratch. Here is what broke.",
+        "score": 8.9,
+        "has_code": false,
+        "has_story": true,
+        "word_count": 60,
+        "is_generic_hook": false,
+        "revisions_used": 0,
+        "predicted_opportunity": 10
       },
-      {
-        "topic": "Rewriting Celery Worker Queues to AsyncIO TaskGroups",
-        "v0_angle": "An introductory guide covering the key principles of Rewriting Celery Worker Queues to AsyncIO TaskGroups.",
-        "v2_angle": "I spent 3 weeks refactoring our Rewriting Celery Worker Queues to AsyncIO TaskGroups workflow. Here is the unvarnished post-mortem, the $400 mistake we made, and the architecture that fixed it.",
-        "v0_score": 6.8,
-        "v2_score": 8.8,
-        "delta_score": 2.0,
-        "v0_is_generic_title": true,
-        "v2_is_generic_title": false,
-        "v2_has_personal_story": true,
-        "v2_has_code": true
+      "score_delta": 4.2,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_02",
+      "topic": "Rewriting Celery Worker Queues to Native AsyncIO TaskGroups",
+      "niche": "Backend Infrastructure",
+      "difficulty": "medium",
+      "held_out_score": 8.7,
+      "baseline": {
+        "hook": "What is Rewriting Celery Worker Queues to Native AsyncIO TaskGroups? Here is an overview.",
+        "score": 4.8,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 75,
+        "is_generic_hook": true,
+        "predicted_opportunity": 5
       },
-      {
-        "topic": "Vector Database Indexing and Semantic Caching Traps",
-        "v0_angle": "An introductory guide covering the key principles of Vector Database Indexing and Semantic Caching Traps.",
-        "v2_angle": "I spent 3 weeks refactoring our Vector Database Indexing and Semantic Caching Traps workflow. Here is the unvarnished post-mortem, the $400 mistake we made, and the architecture that fixed it.",
-        "v0_score": 6.8,
-        "v2_score": 8.8,
-        "delta_score": 2.0,
-        "v0_is_generic_title": true,
-        "v2_is_generic_title": false,
-        "v2_has_personal_story": true,
-        "v2_has_code": true
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Rewriting Celery Worker Queues to Native AsyncIO TaskGroups architecture from scratch. Here is what broke.",
+        "score": 9.1,
+        "has_code": true,
+        "has_story": true,
+        "word_count": 139,
+        "is_generic_hook": false,
+        "revisions_used": 1,
+        "predicted_opportunity": 8
       },
-      {
-        "topic": "Replacing Framework Boilerplate with Native Typed Python",
-        "v0_angle": "An introductory guide covering the key principles of Replacing Framework Boilerplate with Native Typed Python.",
-        "v2_angle": "I spent 3 weeks refactoring our Replacing Framework Boilerplate with Native Typed Python workflow. Here is the unvarnished post-mortem, the $400 mistake we made, and the architecture that fixed it.",
-        "v0_score": 6.8,
-        "v2_score": 8.8,
-        "delta_score": 2.0,
-        "v0_is_generic_title": true,
-        "v2_is_generic_title": false,
-        "v2_has_personal_story": true,
-        "v2_has_code": true
-      }
-    ]
-  }
+      "score_delta": 4.3,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_03",
+      "topic": "Vector Database Indexing Traps and Salted Hash Cache Gotchas",
+      "niche": "Vector DBs",
+      "difficulty": "hard",
+      "held_out_score": 8.2,
+      "baseline": {
+        "hook": "What is Vector Database Indexing Traps and Salted Hash Cache Gotchas? Here is an overview.",
+        "score": 4.7,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 78,
+        "is_generic_hook": true,
+        "predicted_opportunity": 6
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Vector Database Indexing Traps and Salted Hash Cache Gotchas architecture from scratch. Here is what broke.",
+        "score": 9.1,
+        "has_code": true,
+        "has_story": true,
+        "word_count": 141,
+        "is_generic_hook": false,
+        "revisions_used": 1,
+        "predicted_opportunity": 8
+      },
+      "score_delta": 4.4,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_04",
+      "topic": "Replacing Heavyweight Agent Frameworks with 120 Lines of Native Python",
+      "niche": "AI Agents",
+      "difficulty": "medium",
+      "held_out_score": 8.9,
+      "baseline": {
+        "hook": "What is Replacing Heavyweight Agent Frameworks with 120 Lines of Native Python? Here is an overview.",
+        "score": 5.8,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 81,
+        "is_generic_hook": true,
+        "predicted_opportunity": 4
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Replacing Heavyweight Agent Frameworks with 120 Lines of Native Python architecture from scratch. Here is what broke.",
+        "score": 8.0,
+        "has_code": true,
+        "has_story": true,
+        "word_count": 143,
+        "is_generic_hook": false,
+        "revisions_used": 1,
+        "predicted_opportunity": 9
+      },
+      "score_delta": 2.2,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_05",
+      "topic": "Safeguarding Multi-Agent Autonomous Tool Calls with Pydantic Guardrails",
+      "niche": "AI Safety",
+      "difficulty": "hard",
+      "held_out_score": 8.5,
+      "baseline": {
+        "hook": "What is Safeguarding Multi-Agent Autonomous Tool Calls with Pydantic Guardrails? Here is an overview.",
+        "score": 5.0,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 75,
+        "is_generic_hook": true,
+        "predicted_opportunity": 4
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Safeguarding Multi-Agent Autonomous Tool Calls with Pydantic Guardrails architecture from scratch. Here is what broke.",
+        "score": 8.9,
+        "has_code": false,
+        "has_story": true,
+        "word_count": 64,
+        "is_generic_hook": false,
+        "revisions_used": 0,
+        "predicted_opportunity": 10
+      },
+      "score_delta": 3.9,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_06",
+      "topic": "Database Connection Pooling Bottlenecks under 10k RPS in FastAPI",
+      "niche": "Backend Infrastructure",
+      "difficulty": "medium",
+      "held_out_score": 7.8,
+      "baseline": {
+        "hook": "What is Database Connection Pooling Bottlenecks under 10k RPS in FastAPI? Here is an overview.",
+        "score": 6.0,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 78,
+        "is_generic_hook": true,
+        "predicted_opportunity": 5
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Database Connection Pooling Bottlenecks under 10k RPS in FastAPI architecture from scratch. Here is what broke.",
+        "score": 7.8,
+        "has_code": true,
+        "has_story": true,
+        "word_count": 141,
+        "is_generic_hook": false,
+        "revisions_used": 1,
+        "predicted_opportunity": 7
+      },
+      "score_delta": 1.8,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_07",
+      "topic": "Hybrid Dense-Sparse Search with BM25 vs Pure Cosine Similarity",
+      "niche": "RAG Systems",
+      "difficulty": "hard",
+      "held_out_score": 8.1,
+      "baseline": {
+        "hook": "What is Hybrid Dense-Sparse Search with BM25 vs Pure Cosine Similarity? Here is an overview.",
+        "score": 5.4,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 78,
+        "is_generic_hook": true,
+        "predicted_opportunity": 4
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Hybrid Dense-Sparse Search with BM25 vs Pure Cosine Similarity architecture from scratch. Here is what broke.",
+        "score": 9.3,
+        "has_code": false,
+        "has_story": true,
+        "word_count": 66,
+        "is_generic_hook": false,
+        "revisions_used": 0,
+        "predicted_opportunity": 10
+      },
+      "score_delta": 3.9,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_08",
+      "topic": "The Cost of Token Hallucination Retries in Distributed LLM Workflows",
+      "niche": "AI Systems",
+      "difficulty": "medium",
+      "held_out_score": 7.9,
+      "baseline": {
+        "hook": "What is The Cost of Token Hallucination Retries in Distributed LLM Workflows? Here is an overview.",
+        "score": 5.3,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 81,
+        "is_generic_hook": true,
+        "predicted_opportunity": 6
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our The Cost of Token Hallucination Retries in Distributed LLM Workflows architecture from scratch. Here is what broke.",
+        "score": 8.9,
+        "has_code": false,
+        "has_story": true,
+        "word_count": 68,
+        "is_generic_hook": false,
+        "revisions_used": 0,
+        "predicted_opportunity": 10
+      },
+      "score_delta": 3.6,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_09",
+      "topic": "Designing Bounded In-Memory Message Buffers for Event-Driven Microservices",
+      "niche": "Distributed Systems",
+      "difficulty": "hard",
+      "held_out_score": 8.3,
+      "baseline": {
+        "hook": "What is Designing Bounded In-Memory Message Buffers for Event-Driven Microservices? Here is an overview.",
+        "score": 4.8,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 75,
+        "is_generic_hook": true,
+        "predicted_opportunity": 5
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Designing Bounded In-Memory Message Buffers for Event-Driven Microservices architecture from scratch. Here is what broke.",
+        "score": 7.8,
+        "has_code": false,
+        "has_story": true,
+        "word_count": 64,
+        "is_generic_hook": false,
+        "revisions_used": 0,
+        "predicted_opportunity": 7
+      },
+      "score_delta": 3.0,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_10",
+      "topic": "Mitigating Thundering Herd Traffic on Redis Semantic Cache Evictions",
+      "niche": "Caching",
+      "difficulty": "hard",
+      "held_out_score": 8.6,
+      "baseline": {
+        "hook": "What is Mitigating Thundering Herd Traffic on Redis Semantic Cache Evictions? Here is an overview.",
+        "score": 5.5,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 78,
+        "is_generic_hook": true,
+        "predicted_opportunity": 6
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Mitigating Thundering Herd Traffic on Redis Semantic Cache Evictions architecture from scratch. Here is what broke.",
+        "score": 8.2,
+        "has_code": false,
+        "has_story": true,
+        "word_count": 66,
+        "is_generic_hook": false,
+        "revisions_used": 0,
+        "predicted_opportunity": 7
+      },
+      "score_delta": 2.7,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_11",
+      "topic": "Why We Migrated from Managed Cloud Vector Stores to Local SQLite VSS",
+      "niche": "Edge AI",
+      "difficulty": "medium",
+      "held_out_score": 8.8,
+      "baseline": {
+        "hook": "What is Why We Migrated from Managed Cloud Vector Stores to Local SQLite VSS? Here is an overview.",
+        "score": 6.1,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 87,
+        "is_generic_hook": true,
+        "predicted_opportunity": 5
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Why We Migrated from Managed Cloud Vector Stores to Local SQLite VSS architecture from scratch. Here is what broke.",
+        "score": 9.3,
+        "has_code": false,
+        "has_story": true,
+        "word_count": 72,
+        "is_generic_hook": false,
+        "revisions_used": 0,
+        "predicted_opportunity": 10
+      },
+      "score_delta": 3.2,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_12",
+      "topic": "Structuring Streaming SSE Endpoints with Zero-Downtime Worker Recovery",
+      "niche": "Backend Infrastructure",
+      "difficulty": "medium",
+      "held_out_score": 7.7,
+      "baseline": {
+        "hook": "What is Structuring Streaming SSE Endpoints with Zero-Downtime Worker Recovery? Here is an overview.",
+        "score": 5.2,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 75,
+        "is_generic_hook": true,
+        "predicted_opportunity": 5
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Structuring Streaming SSE Endpoints with Zero-Downtime Worker Recovery architecture from scratch. Here is what broke.",
+        "score": 8.9,
+        "has_code": true,
+        "has_story": true,
+        "word_count": 139,
+        "is_generic_hook": false,
+        "revisions_used": 1,
+        "predicted_opportunity": 10
+      },
+      "score_delta": 3.7,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_13",
+      "topic": "Eliminating N+1 Queries in Async SQLAlchemy 2.0 Relationships",
+      "niche": "Databases",
+      "difficulty": "easy",
+      "held_out_score": 7.5,
+      "baseline": {
+        "hook": "What is Eliminating N+1 Queries in Async SQLAlchemy 2.0 Relationships? Here is an overview.",
+        "score": 4.6,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 75,
+        "is_generic_hook": true,
+        "predicted_opportunity": 6
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Eliminating N+1 Queries in Async SQLAlchemy 2.0 Relationships architecture from scratch. Here is what broke.",
+        "score": 8.9,
+        "has_code": true,
+        "has_story": true,
+        "word_count": 139,
+        "is_generic_hook": false,
+        "revisions_used": 1,
+        "predicted_opportunity": 10
+      },
+      "score_delta": 4.3,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_14",
+      "topic": "Deterministic Schema Retry Protocols for Unreliable LLM JSON Outputs",
+      "niche": "AI Systems",
+      "difficulty": "medium",
+      "held_out_score": 8.4,
+      "baseline": {
+        "hook": "What is Deterministic Schema Retry Protocols for Unreliable LLM JSON Outputs? Here is an overview.",
+        "score": 5.3,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 78,
+        "is_generic_hook": true,
+        "predicted_opportunity": 5
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Deterministic Schema Retry Protocols for Unreliable LLM JSON Outputs architecture from scratch. Here is what broke.",
+        "score": 9.3,
+        "has_code": false,
+        "has_story": true,
+        "word_count": 66,
+        "is_generic_hook": false,
+        "revisions_used": 0,
+        "predicted_opportunity": 10
+      },
+      "score_delta": 4.0,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_15",
+      "topic": "Container Cold-Start Elimination in Kubernetes-Based LLM Serving",
+      "niche": "DevOps / MLOps",
+      "difficulty": "hard",
+      "held_out_score": 8.0,
+      "baseline": {
+        "hook": "What is Container Cold-Start Elimination in Kubernetes-Based LLM Serving? Here is an overview.",
+        "score": 4.8,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 72,
+        "is_generic_hook": true,
+        "predicted_opportunity": 6
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Container Cold-Start Elimination in Kubernetes-Based LLM Serving architecture from scratch. Here is what broke.",
+        "score": 9.2,
+        "has_code": false,
+        "has_story": true,
+        "word_count": 62,
+        "is_generic_hook": false,
+        "revisions_used": 0,
+        "predicted_opportunity": 9
+      },
+      "score_delta": 4.4,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_16",
+      "topic": "Context Compression Techniques that Cut RAG Prompt Costs by 54%",
+      "niche": "RAG Systems",
+      "difficulty": "medium",
+      "held_out_score": 8.6,
+      "baseline": {
+        "hook": "What is Context Compression Techniques that Cut RAG Prompt Costs by 54%? Here is an overview.",
+        "score": 5.6,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 81,
+        "is_generic_hook": true,
+        "predicted_opportunity": 4
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Context Compression Techniques that Cut RAG Prompt Costs by 54% architecture from scratch. Here is what broke.",
+        "score": 8.4,
+        "has_code": false,
+        "has_story": true,
+        "word_count": 68,
+        "is_generic_hook": false,
+        "revisions_used": 0,
+        "predicted_opportunity": 9
+      },
+      "score_delta": 2.8,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_17",
+      "topic": "Optimizing SQLite Write-Ahead Logging (WAL) for High Concurrent Reads",
+      "niche": "Databases",
+      "difficulty": "medium",
+      "held_out_score": 7.9,
+      "baseline": {
+        "hook": "What is Optimizing SQLite Write-Ahead Logging (WAL) for High Concurrent Reads? Here is an overview.",
+        "score": 5.9,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 78,
+        "is_generic_hook": true,
+        "predicted_opportunity": 6
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Optimizing SQLite Write-Ahead Logging (WAL) for High Concurrent Reads architecture from scratch. Here is what broke.",
+        "score": 8.8,
+        "has_code": true,
+        "has_story": true,
+        "word_count": 141,
+        "is_generic_hook": false,
+        "revisions_used": 1,
+        "predicted_opportunity": 9
+      },
+      "score_delta": 2.9,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_18",
+      "topic": "Dynamic Model Routing: Balancing gpt-4o Quality with gpt-4o-mini Latency",
+      "niche": "AI Gateways",
+      "difficulty": "medium",
+      "held_out_score": 8.5,
+      "baseline": {
+        "hook": "What is Dynamic Model Routing: Balancing gpt-4o Quality with gpt-4o-mini Latency? Here is an overview.",
+        "score": 5.7,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 78,
+        "is_generic_hook": true,
+        "predicted_opportunity": 4
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Dynamic Model Routing: Balancing gpt-4o Quality with gpt-4o-mini Latency architecture from scratch. Here is what broke.",
+        "score": 8.0,
+        "has_code": false,
+        "has_story": true,
+        "word_count": 66,
+        "is_generic_hook": false,
+        "revisions_used": 0,
+        "predicted_opportunity": 9
+      },
+      "score_delta": 2.3,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_19",
+      "topic": "Handling Async Python CancelledError Gracefully in Long-Running Tasks",
+      "niche": "Python Internals",
+      "difficulty": "hard",
+      "held_out_score": 8.2,
+      "baseline": {
+        "hook": "What is Handling Async Python CancelledError Gracefully in Long-Running Tasks? Here is an overview.",
+        "score": 5.0,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 75,
+        "is_generic_hook": true,
+        "predicted_opportunity": 6
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Handling Async Python CancelledError Gracefully in Long-Running Tasks architecture from scratch. Here is what broke.",
+        "score": 8.2,
+        "has_code": true,
+        "has_story": true,
+        "word_count": 139,
+        "is_generic_hook": false,
+        "revisions_used": 1,
+        "predicted_opportunity": 7
+      },
+      "score_delta": 3.2,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_20",
+      "topic": "Benchmarking Reranker Models: Cohere v3 vs Cross-Encoder MiniLM",
+      "niche": "Information Retrieval",
+      "difficulty": "medium",
+      "held_out_score": 8.3,
+      "baseline": {
+        "hook": "What is Benchmarking Reranker Models: Cohere v3 vs Cross-Encoder MiniLM? Here is an overview.",
+        "score": 5.8,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 75,
+        "is_generic_hook": true,
+        "predicted_opportunity": 5
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Benchmarking Reranker Models: Cohere v3 vs Cross-Encoder MiniLM architecture from scratch. Here is what broke.",
+        "score": 8.6,
+        "has_code": true,
+        "has_story": true,
+        "word_count": 139,
+        "is_generic_hook": false,
+        "revisions_used": 1,
+        "predicted_opportunity": 7
+      },
+      "score_delta": 2.8,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_21",
+      "topic": "Why ThreadPoolExecutor Fails Silently under CPU-Bound Tokenization",
+      "niche": "Concurrency",
+      "difficulty": "hard",
+      "held_out_score": 8.1,
+      "baseline": {
+        "hook": "What is Why ThreadPoolExecutor Fails Silently under CPU-Bound Tokenization? Here is an overview.",
+        "score": 5.5,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 72,
+        "is_generic_hook": true,
+        "predicted_opportunity": 6
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Why ThreadPoolExecutor Fails Silently under CPU-Bound Tokenization architecture from scratch. Here is what broke.",
+        "score": 7.8,
+        "has_code": false,
+        "has_story": true,
+        "word_count": 62,
+        "is_generic_hook": false,
+        "revisions_used": 0,
+        "predicted_opportunity": 7
+      },
+      "score_delta": 2.3,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_22",
+      "topic": "Implementing Token Bucket Rate Limiters in FastAPI with Zero Shared State",
+      "niche": "API Security",
+      "difficulty": "medium",
+      "held_out_score": 7.6,
+      "baseline": {
+        "hook": "What is Implementing Token Bucket Rate Limiters in FastAPI with Zero Shared State? Here is an overview.",
+        "score": 4.8,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 84,
+        "is_generic_hook": true,
+        "predicted_opportunity": 4
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Implementing Token Bucket Rate Limiters in FastAPI with Zero Shared State architecture from scratch. Here is what broke.",
+        "score": 8.2,
+        "has_code": true,
+        "has_story": true,
+        "word_count": 145,
+        "is_generic_hook": false,
+        "revisions_used": 1,
+        "predicted_opportunity": 7
+      },
+      "score_delta": 3.4,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_23",
+      "topic": "Document Chunking Boundary Drift: The Hidden Cause of Retrieval Failures",
+      "niche": "RAG Systems",
+      "difficulty": "hard",
+      "held_out_score": 8.7,
+      "baseline": {
+        "hook": "What is Document Chunking Boundary Drift: The Hidden Cause of Retrieval Failures? Here is an overview.",
+        "score": 4.8,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 81,
+        "is_generic_hook": true,
+        "predicted_opportunity": 5
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Document Chunking Boundary Drift: The Hidden Cause of Retrieval Failures architecture from scratch. Here is what broke.",
+        "score": 8.0,
+        "has_code": true,
+        "has_story": true,
+        "word_count": 143,
+        "is_generic_hook": false,
+        "revisions_used": 1,
+        "predicted_opportunity": 9
+      },
+      "score_delta": 3.2,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_24",
+      "topic": "Writing Deterministic Unit Tests for Probabilistic LLM Agent Decisions",
+      "niche": "Testing & QA",
+      "difficulty": "medium",
+      "held_out_score": 8.4,
+      "baseline": {
+        "hook": "What is Writing Deterministic Unit Tests for Probabilistic LLM Agent Decisions? Here is an overview.",
+        "score": 5.0,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 78,
+        "is_generic_hook": true,
+        "predicted_opportunity": 5
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Writing Deterministic Unit Tests for Probabilistic LLM Agent Decisions architecture from scratch. Here is what broke.",
+        "score": 8.8,
+        "has_code": true,
+        "has_story": true,
+        "word_count": 141,
+        "is_generic_hook": false,
+        "revisions_used": 1,
+        "predicted_opportunity": 9
+      },
+      "score_delta": 3.8,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_25",
+      "topic": "How We Sliced Embedding Generation Times by 10x using ONNX Runtime",
+      "niche": "Performance Tuning",
+      "difficulty": "hard",
+      "held_out_score": 8.8,
+      "baseline": {
+        "hook": "What is How We Sliced Embedding Generation Times by 10x using ONNX Runtime? Here is an overview.",
+        "score": 5.1,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 84,
+        "is_generic_hook": true,
+        "predicted_opportunity": 6
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our How We Sliced Embedding Generation Times by 10x using ONNX Runtime architecture from scratch. Here is what broke.",
+        "score": 8.6,
+        "has_code": true,
+        "has_story": true,
+        "word_count": 145,
+        "is_generic_hook": false,
+        "revisions_used": 1,
+        "predicted_opportunity": 7
+      },
+      "score_delta": 3.5,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_26",
+      "topic": "Real-Time WebSocket Backpressure Management in Event Stream Dashboards",
+      "niche": "Frontend-Backend Architecture",
+      "difficulty": "medium",
+      "held_out_score": 7.5,
+      "baseline": {
+        "hook": "What is Real-Time WebSocket Backpressure Management in Event Stream Dashboards? Here is an overview.",
+        "score": 5.8,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 75,
+        "is_generic_hook": true,
+        "predicted_opportunity": 6
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Real-Time WebSocket Backpressure Management in Event Stream Dashboards architecture from scratch. Here is what broke.",
+        "score": 9.3,
+        "has_code": true,
+        "has_story": true,
+        "word_count": 139,
+        "is_generic_hook": false,
+        "revisions_used": 1,
+        "predicted_opportunity": 10
+      },
+      "score_delta": 3.5,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_27",
+      "topic": "Memory Leaks in Long-Lived AsyncIO Tasks: Tracing Uncollected Coroutines",
+      "niche": "Python Profiling",
+      "difficulty": "hard",
+      "held_out_score": 8.6,
+      "baseline": {
+        "hook": "What is Memory Leaks in Long-Lived AsyncIO Tasks: Tracing Uncollected Coroutines? Here is an overview.",
+        "score": 5.5,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 78,
+        "is_generic_hook": true,
+        "predicted_opportunity": 4
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Memory Leaks in Long-Lived AsyncIO Tasks: Tracing Uncollected Coroutines architecture from scratch. Here is what broke.",
+        "score": 8.6,
+        "has_code": true,
+        "has_story": true,
+        "word_count": 141,
+        "is_generic_hook": false,
+        "revisions_used": 1,
+        "predicted_opportunity": 7
+      },
+      "score_delta": 3.1,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_28",
+      "topic": "Why We Replaced Postgres Full-Text Search with Inverted Indexes in SQLite",
+      "niche": "Search Architecture",
+      "difficulty": "medium",
+      "held_out_score": 7.9,
+      "baseline": {
+        "hook": "What is Why We Replaced Postgres Full-Text Search with Inverted Indexes in SQLite? Here is an overview.",
+        "score": 5.7,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 84,
+        "is_generic_hook": true,
+        "predicted_opportunity": 6
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Why We Replaced Postgres Full-Text Search with Inverted Indexes in SQLite architecture from scratch. Here is what broke.",
+        "score": 8.7,
+        "has_code": true,
+        "has_story": true,
+        "word_count": 145,
+        "is_generic_hook": false,
+        "revisions_used": 1,
+        "predicted_opportunity": 8
+      },
+      "score_delta": 3.0,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_29",
+      "topic": "Guardrails against Prompt Injection in Public-Facing Agent Tool Execution",
+      "niche": "AI Security",
+      "difficulty": "hard",
+      "held_out_score": 8.7,
+      "baseline": {
+        "hook": "What is Guardrails against Prompt Injection in Public-Facing Agent Tool Execution? Here is an overview.",
+        "score": 4.9,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 78,
+        "is_generic_hook": true,
+        "predicted_opportunity": 6
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Guardrails against Prompt Injection in Public-Facing Agent Tool Execution architecture from scratch. Here is what broke.",
+        "score": 8.5,
+        "has_code": true,
+        "has_story": true,
+        "word_count": 141,
+        "is_generic_hook": false,
+        "revisions_used": 1,
+        "predicted_opportunity": 10
+      },
+      "score_delta": 3.6,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_30",
+      "topic": "Designing Human-in-the-Loop Reversible State Checkpoints in AI Pipelines",
+      "niche": "Workflow Automation",
+      "difficulty": "medium",
+      "held_out_score": 8.2,
+      "baseline": {
+        "hook": "What is Designing Human-in-the-Loop Reversible State Checkpoints in AI Pipelines? Here is an overview.",
+        "score": 5.6,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 75,
+        "is_generic_hook": true,
+        "predicted_opportunity": 6
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Designing Human-in-the-Loop Reversible State Checkpoints in AI Pipelines architecture from scratch. Here is what broke.",
+        "score": 9.1,
+        "has_code": true,
+        "has_story": true,
+        "word_count": 139,
+        "is_generic_hook": false,
+        "revisions_used": 1,
+        "predicted_opportunity": 8
+      },
+      "score_delta": 3.5,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_31",
+      "topic": "Automated Cost Budgets for Autonomous Multi-Step Tool Calling Agents",
+      "niche": "FinOps / AI Infrastructure",
+      "difficulty": "medium",
+      "held_out_score": 8.0,
+      "baseline": {
+        "hook": "What is Automated Cost Budgets for Autonomous Multi-Step Tool Calling Agents? Here is an overview.",
+        "score": 6.0,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 78,
+        "is_generic_hook": true,
+        "predicted_opportunity": 6
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Automated Cost Budgets for Autonomous Multi-Step Tool Calling Agents architecture from scratch. Here is what broke.",
+        "score": 7.8,
+        "has_code": true,
+        "has_story": true,
+        "word_count": 141,
+        "is_generic_hook": false,
+        "revisions_used": 1,
+        "predicted_opportunity": 7
+      },
+      "score_delta": 1.8,
+      "latency_seconds": 0.0
+    },
+    {
+      "id": "eval_32",
+      "topic": "Micro-Batching Optimization for Embedding Pipelines in Production",
+      "niche": "Data Ingestion",
+      "difficulty": "hard",
+      "held_out_score": 8.3,
+      "baseline": {
+        "hook": "What is Micro-Batching Optimization for Embedding Pipelines in Production? Here is an overview.",
+        "score": 4.7,
+        "has_code": false,
+        "has_story": false,
+        "word_count": 72,
+        "is_generic_hook": true,
+        "predicted_opportunity": 4
+      },
+      "learned": {
+        "hook": "I spent 3 weeks rewriting our Micro-Batching Optimization for Embedding Pipelines in Production architecture from scratch. Here is what broke.",
+        "score": 8.9,
+        "has_code": false,
+        "has_story": true,
+        "word_count": 62,
+        "is_generic_hook": false,
+        "revisions_used": 0,
+        "predicted_opportunity": 10
+      },
+      "score_delta": 4.2,
+      "latency_seconds": 0.0
+    }
+  ]
 }

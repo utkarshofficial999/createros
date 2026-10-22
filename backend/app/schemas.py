@@ -2,13 +2,35 @@ from typing import List, Optional, Any, Dict, Union
 from pydantic import BaseModel, Field, ConfigDict
 from datetime import datetime
 
-# --- Statistical Pattern Schemas ---
+# --- Statistical Pattern & Learned Rules Schemas ---
 class Pattern(BaseModel):
     feature: str
     description: str
     lift: float
     n: int
     confidence: float
+
+class LearnedRule(BaseModel):
+    rule_id: str = Field(..., description="Unique rule identifier e.g. RULE-STORY-01")
+    category: str = Field(..., description="hook, format, evidence, tone, or structure")
+    directive: str = Field(..., description="Actionable prompt instruction")
+    weight: float = Field(1.0, description="Multiplier lift weight")
+    rationale: str = Field(..., description="Statistical basis for the rule")
+
+class PerformanceInsight(BaseModel):
+    pattern_name: str
+    verdict: str
+    lift_multiplier: float
+    sample_size: int
+    why_it_performed: str
+    underlying_human_behavior: str
+    actionable_rule: str
+
+class AnalystReport(BaseModel):
+    executive_summary: str
+    top_performing_drivers: List[PerformanceInsight] = []
+    underperforming_traps: List[PerformanceInsight] = []
+    recommended_strategy_updates: List[str] = []
 
 class Voice(BaseModel):
     tone: str
@@ -17,14 +39,15 @@ class Voice(BaseModel):
     cta_style: str
 
 class CreatorModel(BaseModel):
-    winning_patterns: List[Pattern]
-    losing_patterns: List[Pattern]
-    preferred_topics: List[str]
-    avoid_topics: List[str]
+    winning_patterns: List[Pattern] = []
+    losing_patterns: List[Pattern] = []
+    rules: List[LearnedRule] = []
+    preferred_topics: List[str] = []
+    avoid_topics: List[str] = []
     voice: Voice
-    best_length: str
-    recommendations: List[str]
-    overall_confidence: float
+    best_length: str = "800-1200 words"
+    recommendations: List[str] = []
+    overall_confidence: float = 0.50
 
 # --- Pipeline Schemas ---
 class Strategy(BaseModel):
@@ -34,6 +57,7 @@ class Strategy(BaseModel):
     structure: List[str] = Field(..., description="Outline sections")
     why_this_works: str = Field(..., description="Must cite creator model patterns and lift")
     opportunity_score: int = Field(..., ge=1, le=10)
+    applied_rule_ids: List[str] = Field(default_factory=list, description="IDs of learned rules applied in this strategy")
 
 class Review(BaseModel):
     hook_strength: int = Field(..., ge=1, le=10)
@@ -42,6 +66,7 @@ class Review(BaseModel):
     specificity: int = Field(..., ge=1, le=10)
     overall: float = Field(..., ge=1.0, le=10.0)
     feedback: Union[List[str], str] = []
+    passed: bool = Field(False, description="True if overall >= quality threshold")
 
 class RepurposedContent(BaseModel):
     linkedin_post: str
@@ -55,11 +80,63 @@ class VisualDirection(BaseModel):
     image_url: Optional[str] = None
 
 class DecisionLog(BaseModel):
-    agent: str  # "Strategist", "Writer", "Editor", "Visual", "Learner"
+    agent: str  # "Strategist", "Writer", "Critic", "Analyst", "Visual", "Repurposer"
     decision: str
     reason: str
+    model_used: Optional[str] = None
+    strategy_version: Optional[int] = None
+    applied_rules: Optional[List[str]] = None
     confidence: Optional[float] = None
     timestamp: Optional[str] = None
+
+# --- Ingestion Schemas ---
+class PostIngestItem(BaseModel):
+    title: str
+    body: str
+    topic_tag: str = "AI Engineering"
+    platform: str = "linkedin"
+    format: Optional[str] = None
+    impressions: int = 1000
+    likes: int = 20
+    comments: int = 5
+    shares: int = 2
+    saves: int = 2
+    published_at: Optional[datetime] = None
+
+class BatchIngestRequest(BaseModel):
+    posts: List[PostIngestItem]
+
+class BatchIngestResponse(BaseModel):
+    ingested_count: int
+    total_posts: int
+    overall_avg_score: float
+    message: str
+
+# --- Audit & Decision Schemas ---
+class AuditDecisionResponse(BaseModel):
+    id: int
+    run_id: str
+    post_id: Optional[int] = None
+    agent: str
+    model_used: str
+    strategy_version: int
+    applied_rules: List[str] = []
+    inputs_summary: Optional[str] = None
+    decision: str
+    reason: str
+    outcome_score: Optional[float] = None
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+class ExplainOutputResponse(BaseModel):
+    post_id: int
+    title: str
+    strategy_version: int
+    applied_rules: List[LearnedRule] = []
+    decision_trail: List[AuditDecisionResponse] = []
+    rag_sources: List[Dict[str, Any]] = []
+    explanation: str
 
 class GeneratedContent(BaseModel):
     main_content: str
@@ -69,6 +146,7 @@ class GeneratedContent(BaseModel):
     visual: VisualDirection
     self_review: Review
     decision_trail: List[DecisionLog] = []
+
 
 # --- API Request & Response Schemas ---
 class CreatorProfile(BaseModel):
