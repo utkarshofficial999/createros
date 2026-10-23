@@ -71,11 +71,11 @@ export const ModelTimeline: React.FC<ModelTimelineProps> = ({
                   )}
                 </div>
 
-                <div className="mt-2 flex items-center space-x-4 text-[11px] text-slate-400 font-mono">
+                <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-400 font-mono">
                   <span>Grounding: <strong>{m.based_on_n_posts} posts</strong></span>
-                  <span>•</span>
+                  <span className="hidden sm:inline">•</span>
                   <span>Confidence: <strong>{Math.round(m.model.overall_confidence * 100)}%</strong></span>
-                  <span>•</span>
+                  <span className="hidden sm:inline">•</span>
                   <span>Patterns: <strong>{m.model.winning_patterns.length} win</strong></span>
                 </div>
               </div>

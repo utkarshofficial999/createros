@@ -84,7 +84,7 @@ export const IdeaStudio: React.FC<IdeaStudioProps> = ({
             <Sparkles className="w-4 h-4" />
             <span>Idea Studio • Conditioned on Model v{activeModel?.version || 1}</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             Generate High-Performance Ideas & Drafts
           </h1>
           <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 max-w-2xl leading-relaxed">
@@ -93,8 +93,8 @@ export const IdeaStudio: React.FC<IdeaStudioProps> = ({
         </div>
 
         {activeModel && (
-          <div className="flex items-center space-x-3 px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm">
-            <div className="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+          <div className="flex items-center space-x-3 px-3 sm:px-4 py-2 sm:py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm w-full md:w-auto">
+            <div className="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 shrink-0">
               <Cpu className="w-4 h-4" />
             </div>
             <div>
@@ -110,8 +110,8 @@ export const IdeaStudio: React.FC<IdeaStudioProps> = ({
       </div>
 
       {/* Main Input Control Bar */}
-      <div className="glass-panel rounded-2xl p-6 border border-slate-200/80 dark:border-creator-border shadow-xl space-y-5">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+      <div className="glass-panel rounded-2xl p-4 sm:p-6 border border-slate-200/80 dark:border-creator-border shadow-xl space-y-4 sm:space-y-5">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4">
           
           {/* Topic */}
           <div className="lg:col-span-6 space-y-1.5">
@@ -165,24 +165,24 @@ export const IdeaStudio: React.FC<IdeaStudioProps> = ({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-3.5 border-t border-slate-200/80 dark:border-slate-800">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-3.5 border-t border-slate-200/80 dark:border-slate-800">
           <button
             onClick={handleGenerateIdeas}
             disabled={isGeneratingIdeas || isStreaming}
-            className="flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-white font-semibold text-xs transition-all shadow-sm hover:border-slate-300 disabled:opacity-50"
+            className="flex items-center justify-center space-x-2 w-full sm:w-auto px-5 py-2.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-white font-semibold text-xs transition-all shadow-sm hover:border-slate-300 disabled:opacity-50"
           >
-            <Lightbulb className="w-4 h-4 text-amber-500" />
+            <Lightbulb className="w-4 h-4 text-amber-500 shrink-0" />
             <span>{isGeneratingIdeas ? 'Synthesizing Ideas...' : 'Generate 5 Ideas via Creator Model'}</span>
           </button>
 
           <button
             onClick={handleStartPipeline}
             disabled={isStreaming}
-            className="flex items-center space-x-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white font-bold text-xs shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30 hover:scale-[1.01] transition-all disabled:opacity-50"
+            className="flex items-center justify-center space-x-2 w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white font-bold text-xs shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30 hover:scale-[1.01] transition-all disabled:opacity-50"
           >
-            <Sparkles className="w-4 h-4 text-white" />
+            <Sparkles className="w-4 h-4 text-white shrink-0" />
             <span>Launch Autonomous Pipeline (SSE Stream)</span>
-            <ArrowRight className="w-4 h-4 ml-1" />
+            <ArrowRight className="w-4 h-4 ml-1 shrink-0" />
           </button>
         </div>
       </div>
@@ -199,7 +199,7 @@ export const IdeaStudio: React.FC<IdeaStudioProps> = ({
       {/* 5 Generated Ideas Grid */}
       {ideas.length > 0 && (
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2">
             <div className="flex items-center space-x-2">
               <Flame className="w-5 h-5 text-amber-500" />
               <h3 className="text-base font-bold text-slate-900 dark:text-white">

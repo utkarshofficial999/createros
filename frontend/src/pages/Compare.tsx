@@ -50,7 +50,7 @@ export const Compare: React.FC<CompareProps> = ({ activeModel }) => {
             <GitCompare className="w-4 h-4" />
             <span>The Hero Demo • Proving The Core Thesis</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             Before vs After Analytics Learning
           </h1>
           <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
@@ -58,15 +58,15 @@ export const Compare: React.FC<CompareProps> = ({ activeModel }) => {
           </p>
         </div>
 
-        <div className="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-mono">
-          <Zap className="w-3.5 h-3.5 text-creator-cyan animate-pulse" />
+        <div className="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-mono self-start md:self-auto">
+          <Zap className="w-3.5 h-3.5 text-creator-cyan animate-pulse shrink-0" />
           <span>No ChatGPT Wrapper • Real Dynamic Conditioning</span>
         </div>
       </div>
 
       {/* Control Input Bar */}
-      <div className="glass-panel rounded-2xl p-5 border border-creator-border shadow-xl space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+      <div className="glass-panel rounded-2xl p-4 sm:p-5 border border-creator-border shadow-xl space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-4 items-center">
           
           <div className="md:col-span-6 space-y-1">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-400">
@@ -109,7 +109,7 @@ export const Compare: React.FC<CompareProps> = ({ activeModel }) => {
             </select>
           </div>
 
-          <div className="md:col-span-2 pt-5">
+          <div className="md:col-span-2 pt-2 md:pt-5">
             <button
               onClick={handleRunComparison}
               disabled={isLoading}

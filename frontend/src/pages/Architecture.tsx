@@ -149,10 +149,10 @@ export const Architecture: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
         <div>
           <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-creator-cyan mb-1.5">
-            <Network className="w-4 h-4" />
+            <Network className="w-4 h-4 shrink-0" />
             <span>Autonomous Multi-Agent System Architecture</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             CreatorOS Closed-Loop Engine
           </h1>
           <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 max-w-2xl leading-relaxed">
@@ -161,20 +161,20 @@ export const Architecture: React.FC = () => {
         </div>
 
         {/* Live Infrastructure Status Pills */}
-        <div className="flex flex-wrap items-center gap-2.5">
-          <div className="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs shadow-sm">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+          <div className="flex items-center space-x-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs shadow-sm">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
             <span className="text-slate-500 dark:text-slate-400">Mesh API:</span>
             <span className="font-mono font-bold text-slate-800 dark:text-emerald-400">Primary Gateway</span>
           </div>
 
-          <div className="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs shadow-sm">
+          <div className="flex items-center space-x-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs shadow-sm">
             <Database className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
             <span className="text-slate-500 dark:text-slate-400">Vector DB:</span>
             <span className="font-mono font-bold text-slate-800 dark:text-cyan-300">Pinecone Serverless</span>
           </div>
 
-          <div className="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs shadow-sm">
+          <div className="flex items-center space-x-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs shadow-sm">
             <Clock className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
             <span className="text-slate-500 dark:text-slate-400">Scheduler:</span>
             <span className="font-mono font-bold text-slate-800 dark:text-indigo-300">APScheduler Async</span>
@@ -183,10 +183,10 @@ export const Architecture: React.FC = () => {
       </div>
 
       {/* Main Architecture Diagram Canvas */}
-      <div className="glass-panel rounded-2xl p-6 border border-slate-200/80 dark:border-creator-border shadow-xl space-y-6">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+      <div className="glass-panel rounded-2xl p-4 sm:p-6 border border-slate-200/80 dark:border-creator-border shadow-xl space-y-5 sm:space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2 pb-3 border-b border-slate-200 dark:border-slate-800">
           <div className="flex items-center space-x-2">
-            <GitBranch className="w-5 h-5 text-indigo-600 dark:text-creator-cyan" />
+            <GitBranch className="w-5 h-5 text-indigo-600 dark:text-creator-cyan shrink-0" />
             <h3 className="text-base font-bold text-slate-900 dark:text-white">
               End-to-End Orchestration Pipeline & Feedback Loop
             </h3>
@@ -195,7 +195,7 @@ export const Architecture: React.FC = () => {
         </div>
 
         {/* Visual Pipeline Stage Flow */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           
           {/* Phase 1: Strategic Grounding */}
           <div className="space-y-3">

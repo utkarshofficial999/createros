@@ -90,7 +90,7 @@ export const Learning: React.FC<LearningProps> = ({
             <BrainCircuit className="w-4 h-4" />
             <span>Self-Optimizing Strategy Brain • Active Model v{activeModel.version}</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             Creator Model & Pattern Rules
           </h1>
           <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
@@ -99,27 +99,27 @@ export const Learning: React.FC<LearningProps> = ({
         </div>
 
         {/* Re-learn Button */}
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-3 w-full md:w-auto">
           <button
             onClick={handleRelearn}
             disabled={isRelearning}
-            className="flex items-center space-x-2.5 px-6 py-3 rounded-2xl bg-gradient-to-r from-creator-accent via-indigo-600 to-creator-cyan text-white font-extrabold text-xs shadow-xl shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] transition-all disabled:opacity-50"
+            className="flex items-center justify-center space-x-2.5 w-full md:w-auto px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl bg-gradient-to-r from-creator-accent via-indigo-600 to-creator-cyan text-white font-extrabold text-xs shadow-xl shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] transition-all disabled:opacity-50"
           >
-            <RefreshCw className={`w-4 h-4 ${isRelearning ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-4 h-4 shrink-0 ${isRelearning ? 'animate-spin' : ''}`} />
             <span>{isRelearning ? 'Computing Stats & Re-learning...' : `Re-learn from Analytics (v${activeModel.version} → v${activeModel.version + 1})`}</span>
           </button>
         </div>
       </div>
 
       {relearnNotification && (
-        <div className="p-4 rounded-2xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 text-xs flex items-center justify-between shadow-lg animate-fadeIn">
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 shadow-lg animate-fadeIn">
           <div className="flex items-center space-x-2.5">
-            <Sparkles className="w-4 h-4 text-emerald-400" />
+            <Sparkles className="w-4 h-4 text-emerald-400 shrink-0" />
             <span className="font-semibold">{relearnNotification}</span>
           </div>
           <button
             onClick={onGoToCompare}
-            className="px-3 py-1 rounded-lg bg-emerald-500/20 text-emerald-200 border border-emerald-500/30 hover:bg-emerald-500/30 font-bold font-mono transition-colors"
+            className="px-3 py-1 rounded-lg bg-emerald-500/20 text-emerald-200 border border-emerald-500/30 hover:bg-emerald-500/30 font-bold font-mono transition-colors self-end sm:self-auto"
           >
             Compare in Before/After →
           </button>

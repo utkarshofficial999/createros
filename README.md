@@ -104,6 +104,122 @@ grep -rn "generativelanguage.googleapis.com" backend/
 
 ---
 
+## 🧠 How AI is Used in This Project (User & Developer Guide)
+
+CreatorOS leverages an **agentic, closed-loop AI architecture** where AI is not just a one-off text generator, but an integrated team of specialized agents that analyze audience performance, formulate versioned editorial rules, generate and critique drafts, create visual blueprints, adapt content for multiple social platforms, and continuously learn from real metrics.
+
+All model completions, structured JSON extractions, semantic vector embeddings, and LLM judge evaluations route strictly through the **Mesh API Gateway** (`https://api.meshapi.ai/v1`).
+
+---
+
+### 1. Specialized AI Agent Team & Model Roles
+
+| Agent Role | Model via Mesh API | Primary Responsibility | Code Reference |
+| :--- | :--- | :--- | :--- |
+| **Analyst Agent** | `openai/gpt-4o` | Analyzes historical engagement telemetry; identifies statistical feature lifts ($>1.15\times$ winning, $<0.85\times$ losing patterns) | [`backend/app/services/learner.py`](file:///e:/creater%20os/backend/app/services/learner.py) |
+| **Strategist Learner** | `openai/gpt-4o` | Synthesizes machine-readable, versioned `LearnedRule` directives (`RULE-STORY-01`, `RULE-CODE-02`, `RULE-NO-DEF-03`) into the active Creator Model ($v0 \rightarrow v1 \rightarrow v2$) | [`backend/app/services/learner.py`](file:///e:/creater%20os/backend/app/services/learner.py) |
+| **Strategist Agent** | `openai/gpt-4o` | Formulates post outline, hook angles, and rule citations for a given user topic brief | [`backend/app/services/pipeline.py`](file:///e:/creater%20os/backend/app/services/pipeline.py#L90-L135) |
+| **Writer Agent** | `openai/gpt-4o-mini` | Generates full-fidelity content conditioned on active learned rules, forbidden phrases, and semantic exemplars | [`backend/app/services/pipeline.py`](file:///e:/creater%20os/backend/app/services/pipeline.py#L137-L195) |
+| **Critic / Verifier** | `openai/gpt-4o` | Rigorously grades drafts on a 10-point rubric; triggers an autonomous revision loop if score $< 7.5$ or rules are violated | [`backend/app/services/pipeline.py`](file:///e:/creater%20os/backend/app/services/pipeline.py#L197-L270) |
+| **Visual Director** | `openai/gpt-4o-mini` | Designs visual accompaniment, generating structured art briefs and code-ready SVG vector blueprints | [`backend/app/services/image_service.py`](file:///e:/creater%20os/backend/app/services/image_service.py) |
+| **Repurposer Agent** | `openai/gpt-4o-mini` | Transforms approved content into platform-native formats (LinkedIn post, X thread, Instagram carousel script) | [`backend/app/services/pipeline.py`](file:///e:/creater%20os/backend/app/services/pipeline.py#L272-L320) |
+| **Evaluation Judge** | `openai/gpt-4o` | Impartial automated LLM judge measuring editorial quality, hook strength, and rule compliance across held-out benchmarks | [`eval/run_eval.py`](file:///e:/creater%20os/eval/run_eval.py) |
+| **Semantic Memory** | `openai/text-embedding-3-small` | Generates 1536-dimensional vector embeddings for historical posts and exemplars to power semantic RAG | [`backend/app/services/vector_store.py`](file:///e:/creater%20os/backend/app/services/vector_store.py) |
+
+---
+
+### 2. How to Use the AI Capabilities in CreatorOS
+
+Here is how you can use each AI feature through the Web UI, REST API, or CLI:
+
+#### A. AI Idea Generation & Brainstorming
+* **Web UI**: Navigate to **Idea Studio** (`http://localhost:5173/ideas`), enter your domain/topic (e.g. *"FastAPI Microservices"*), select target platform & goal, and click **Generate Ideas**.
+* **REST API**:
+  ```bash
+  curl -X POST http://localhost:8000/api/ideas/generate \
+    -H "Content-Type: application/json" \
+    -d '{"topic": "Kubernetes Out-of-Memory Traps", "platform": "linkedin", "goal": "growth"}'
+  ```
+* **How AI Works Here**: The Strategist prompt loads the active versioned Creator Model rules (e.g. $v2$) to suggest 5 high-converting angles that bypass generic clichés.
+
+#### B. Multi-Agent Content Generation (Live SSE Streaming)
+* **Web UI**: In **Editor Studio** (`http://localhost:5173/editor`), type your topic brief or pick an idea, select your hook style, and click **Generate Content**.
+* **Real-Time Streaming**: The UI displays live Server-Sent Events (SSE) showing each agent working in sequence:
+  1. *Strategist* formulating angle and citing active rules (`RULE-STORY-01`, etc.)
+  2. *Writer* generating the first draft
+  3. *Critic* grading and either approving or demanding revisions
+  4. *Visual Director* building an SVG diagram
+  5. *Repurposer* producing LinkedIn, X, and Instagram formats
+* **REST API (Streaming)**:
+  ```bash
+  # Step 1: Start pipeline
+  curl -X POST http://localhost:8000/api/generate \
+    -H "Content-Type: application/json" \
+    -d '{"topic": "Zero Downtime DB Migrations", "platform": "linkedin", "goal": "authority"}'
+  # Response: {"run_id": "run_a1b2c3d4", "status": "initiated"}
+
+  # Step 2: Stream SSE events
+  curl -N http://localhost:8000/api/generate/run_a1b2c3d4/stream
+  ```
+
+#### C. Autonomous Critic & Revision Loop
+* The Critic agent enforces editorial rigor using a 10-point scoring rubric assessing hook impact, tone calibration, technical depth, and strict adherence to learned rules.
+* **Automatic Retry**: If the score is below the threshold (`QUALITY_GATE_THRESHOLD=7.5`), the Critic rejects the draft, supplies concrete bulleted feedback, and sends it back to the Writer for up to **2 automated revision cycles**.
+
+#### D. AI Visual Director & SVG Vector Blueprint Generation
+* For every approved post, CreatorOS invokes the Visual Director agent via [`backend/app/services/image_service.py`](file:///e:/creater%20os/backend/app/services/image_service.py).
+* Rather than requiring external image APIs, the AI produces clean, standalone, high-aesthetic SVG infographics and architectural diagrams directly in code, ready to embed or export.
+
+#### E. Multi-Platform AI Content Repurposing
+* Once the primary post is validated, the Repurposer agent automatically translates the content into three distinct channel formats:
+  * **LinkedIn Post**: Formatted with spacing, bold callouts, and conversational engagement questions.
+  * **X / Twitter Thread**: Numbered 4–6 tweet thread with punchy hooks and takeaways.
+  * **Instagram Carousel**: Slide-by-slide script with visual and text directives.
+
+#### F. Closed-Loop AI Self-Improvement (Learning from Data)
+* **Step 1 — Ingest Performance Telemetry**:
+  Upload your analytics (impressions, likes, comments, shares, saves) via the **Analytics** page or API (`POST /api/analytics/ingest-file`).
+* **Step 2 — Trigger Model Evolution**:
+  * In the **Learning** tab (`http://localhost:5173/learning`), click **Re-learn from Analytics**.
+  * Or call the API:
+    ```bash
+    curl -X POST http://localhost:8000/api/learning/relearn
+    ```
+  * Or run the automated 3-round demonstration script:
+    ```bash
+    python scripts/demo_loop.py
+    ```
+* **How AI Learns**:
+  1. The deterministic stats engine flags high-lift features.
+  2. The Analyst Agent evaluates *why* top posts succeeded and *why* bottom posts failed.
+  3. The Strategist Learner produces new `LearnedRule` directives and registers a new Creator Model version ($v0 \rightarrow v1 \rightarrow v2$).
+  4. Subsequent generation calls automatically inject these new rules into prompt contexts.
+
+#### G. Auditable AI Decision Trail ("Explain This Output")
+* In either the **Editor** or **Audit Trail** (`http://localhost:5173/audit`), click **Explain This Output**.
+* View complete explainability:
+  * Model used for each step (`openai/gpt-4o` vs `openai/gpt-4o-mini`)
+  * Exact prompt hashes and system instructions
+  * Applied learned rules with justification
+  * Critic scores, evaluation criteria, and revision history
+  * Link to downstream performance metrics once published
+
+#### H. Running the Automated AI Benchmark Judge
+* Run the 32-sample held-out evaluation suite:
+  ```bash
+  python eval/run_eval.py
+  ```
+* An independent LLM judge (`openai/gpt-4o` via Mesh) evaluates unconditioned $v0$ vs learned $v2$ content blindly, verifying statistical lift (+3.33 pts, 100% win rate).
+
+#### I. Offline / Mock Mode (Testing Without API Costs)
+* For offline development, unit tests, or CI verification, set in `.env`:
+  ```bash
+  LLM_PROVIDER=mock
+  ```
+* All agent stages will return deterministic, schema-compliant mock outputs without making external network calls.
+
+---
+
 ## 📊 Self-Evaluation Benchmark Results (32 Held-Out Topics)
 
 To eliminate benchmark bias and avoid circular evaluation, CreatorOS evaluated **32 unseen, real-world technical architecture topics** ([`eval/test_set.json`](./eval/test_set.json)).

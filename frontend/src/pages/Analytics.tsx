@@ -109,7 +109,7 @@ export const Analytics: React.FC<AnalyticsProps> = ({ onRelearnRequested }) => {
             <BarChart3 className="w-4 h-4" />
             <span>Deterministic Performance Engine • Pure Python</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             Seeded Analytics & Feature Lift Matrix
           </h1>
           <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
@@ -118,11 +118,11 @@ export const Analytics: React.FC<AnalyticsProps> = ({ onRelearnRequested }) => {
         </div>
 
         {/* Simulate Live Engagement Action Button */}
-        <div className="flex items-center space-x-3 bg-white dark:bg-slate-900 p-2.5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 bg-white dark:bg-slate-900 p-2 sm:p-2.5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm w-full md:w-auto">
           <select
             value={selectedPostId || ''}
             onChange={(e) => setSelectedPostId(Number(e.target.value))}
-            className="px-3 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white max-w-xs truncate focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+            className="w-full sm:max-w-xs px-3 py-2 sm:py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white truncate focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
           >
             {posts.map((p) => (
               <option key={p.id} value={p.id}>
@@ -134,9 +134,9 @@ export const Analytics: React.FC<AnalyticsProps> = ({ onRelearnRequested }) => {
           <button
             onClick={handleSimulateEngagement}
             disabled={isSimulating || !selectedPostId}
-            className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-gradient-to-r from-creator-accent to-indigo-600 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold text-xs shadow-md transition-all disabled:opacity-50"
+            className="flex items-center justify-center space-x-2 w-full sm:w-auto px-4 py-2 rounded-xl bg-gradient-to-r from-creator-accent to-indigo-600 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold text-xs shadow-md transition-all disabled:opacity-50"
           >
-            <Play className="w-3.5 h-3.5 fill-current" />
+            <Play className="w-3.5 h-3.5 fill-current shrink-0" />
             <span>{isSimulating ? 'Simulating...' : 'Simulate Engagement'}</span>
           </button>
         </div>

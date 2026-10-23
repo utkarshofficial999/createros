@@ -59,6 +59,20 @@ body {
   animation: pulseGlow 3s infinite ease-in-out;
 }
 
+/* Hide scrollbar for tabs on mobile devices while maintaining scrollability */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
 /* ========================================================================= */
 /* White Theme Adjustments & Element Overrides                              */
 /* ========================================================================= */

@@ -83,7 +83,7 @@ export const AuditTrail: React.FC = () => {
             <Shield className="w-3.5 h-3.5" />
             <span>Rubric 7: Immutable Audit Decision Trail</span>
           </div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
             Auditable Decision Log
           </h1>
           <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 max-w-2xl">
@@ -92,10 +92,10 @@ export const AuditTrail: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-3 w-full sm:w-auto">
           <button
             onClick={loadDecisions}
-            className="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600 text-xs font-medium flex items-center space-x-1.5 transition-colors"
+            className="w-full sm:w-auto justify-center px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600 text-xs font-medium flex items-center space-x-1.5 transition-colors"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             <span>Refresh Log</span>
@@ -108,17 +108,17 @@ export const AuditTrail: React.FC = () => {
         {/* Left Column: Decision Filter & List */}
         <div className="lg:col-span-8 space-y-4">
           {/* Filter Bar */}
-          <div className="glass-panel p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div className="glass-panel p-3.5 sm:p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 text-xs">
             <div className="flex items-center space-x-2">
-              <Filter className="w-4 h-4 text-slate-400" />
+              <Filter className="w-4 h-4 text-slate-400 shrink-0" />
               <span className="font-semibold text-slate-700 dark:text-slate-300">Filter By:</span>
             </div>
 
-            <div className="flex items-center space-x-3">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               <select
                 value={agentFilter}
                 onChange={(e) => setAgentFilter(e.target.value)}
-                className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-700 dark:text-slate-300 focus:outline-none focus:border-cyan-500"
+                className="flex-1 sm:flex-none bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-700 dark:text-slate-300 focus:outline-none focus:border-cyan-500"
               >
                 <option value="all">All Agents</option>
                 <option value="Strategist">Strategist</option>
@@ -131,7 +131,7 @@ export const AuditTrail: React.FC = () => {
               <select
                 value={versionFilter}
                 onChange={(e) => setVersionFilter(e.target.value)}
-                className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-700 dark:text-slate-300 focus:outline-none focus:border-cyan-500"
+                className="flex-1 sm:flex-none bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-700 dark:text-slate-300 focus:outline-none focus:border-cyan-500"
               >
                 <option value="all">All Versions</option>
                 <option value="0">Version 0 (Baseline)</option>
@@ -141,7 +141,7 @@ export const AuditTrail: React.FC = () => {
               </select>
             </div>
 
-            <span className="font-mono text-slate-500 text-[11px]">
+            <span className="font-mono text-slate-500 text-[11px] self-end sm:self-auto">
               {decisions.length} recorded decision(s)
             </span>
           </div>
@@ -228,7 +228,7 @@ export const AuditTrail: React.FC = () => {
 
         {/* Right Column: Explain This Output Feature (4 cols) */}
         <div className="lg:col-span-4 space-y-4">
-          <div className="glass-panel p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl space-y-4 sticky top-24">
+          <div className="glass-panel p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl space-y-4 lg:sticky top-24">
             <div className="flex items-center space-x-2 pb-3 border-b border-slate-200 dark:border-slate-800">
               <BrainCircuit className="w-5 h-5 text-cyan-400" />
               <h2 className="text-sm font-bold text-slate-900 dark:text-white">
