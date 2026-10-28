@@ -35,10 +35,6 @@ class Settings(BaseSettings):
     # Provider selection: "mesh" is mandatory; "mock" for local offline tests
     LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "mesh")
     
-    # Fallback developer gateway (optional for local dev when offline)
-    GROQ_API_KEY: Optional[str] = os.getenv("GROQ_API_KEY", None)
-    GROQ_BASE_URL: str = os.getenv("GROQ_BASE_URL", "https://api.groq.com/openai/v1")
-    
     # Pinecone Vector Database (optional cloud storage for embeddings)
     PINECONE_API_KEY: Optional[str] = os.getenv("PINECONE_API_KEY", None)
     PINECONE_INDEX_NAME: str = os.getenv("PINECONE_INDEX_NAME", "creatoros-posts")

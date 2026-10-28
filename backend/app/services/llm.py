@@ -31,44 +31,29 @@ def clean_json_string(text: str) -> str:
     return text
 
 def get_active_provider_info() -> tuple[str, str, str]:
-    """Returns (provider_name, api_key, base_url)."""
+    """Returns (provider_name, api_key, base_url). 100% Mesh API Gateway."""
     current_provider = os.getenv("LLM_PROVIDER", settings.LLM_PROVIDER).lower()
     if current_provider in ("mock", "offline"):
         return ("offline", "", "")
 
     mesh_key = os.getenv("MESH_API_KEY") or settings.MESH_API_KEY
-    if mesh_key and (mesh_key.startswith("rsk_") or not mesh_key.startswith("gsk_")):
+    if mesh_key and (mesh_key.startswith("rsk_") or settings.LLM_PROVIDER == "mesh"):
         return ("mesh", mesh_key, settings.MESH_BASE_URL)
-
-    groq_key = os.getenv("GROQ_API_KEY") or settings.GROQ_API_KEY
-    if groq_key:
-        return ("groq", groq_key, settings.GROQ_BASE_URL)
 
     return ("offline", "", "")
 
-def select_model_for_stage(stage_name: str, provider: Optional[str] = None) -> str:
-    """Routes task to appropriate model class via Groq or Mesh API."""
+def select_model_for_stage(stage_name: str) -> str:
+    """Routes task to appropriate model class via Mesh API."""
     stage = stage_name.lower()
-    if provider == "groq":
-        if stage in ("analyst", "learner"):
-            return settings.GROQ_MODEL_ANALYST
-        elif stage in ("strategist", "strategy"):
-            return settings.GROQ_MODEL_STRATEGIST
-        elif stage in ("critic", "reviewer", "judge", "editor"):
-            return settings.GROQ_MODEL_CRITIC
-        elif stage in ("writer", "repurposer", "visual"):
-            return settings.GROQ_MODEL_WRITER
-        return settings.GROQ_MODEL_DEFAULT
-    else:
-        if stage in ("analyst", "learner"):
-            return settings.MESH_MODEL_ANALYST
-        elif stage in ("strategist", "strategy"):
-            return settings.MESH_MODEL_STRATEGIST
-        elif stage in ("critic", "reviewer", "judge", "editor"):
-            return settings.MESH_MODEL_CRITIC
-        elif stage in ("writer", "repurposer", "visual"):
-            return settings.MESH_MODEL_WRITER
-        return settings.MESH_MODEL_DEFAULT
+    if stage in ("analyst", "learner"):
+        return settings.MESH_MODEL_ANALYST
+    elif stage in ("strategist", "strategy"):
+        return settings.MESH_MODEL_STRATEGIST
+    elif stage in ("critic", "reviewer", "judge", "editor"):
+        return settings.MESH_MODEL_CRITIC
+    elif stage in ("writer", "repurposer", "visual"):
+        return settings.MESH_MODEL_WRITER
+    return settings.MESH_MODEL_DEFAULT
 
 async def call_llm(
     prompt: str,
@@ -79,14 +64,14 @@ async def call_llm(
     context_data: Optional[dict] = None
 ) -> Any:
     """
-    Unified LLM call routing through Groq or Mesh API Gateway.
+    Unified LLM call routing through Mesh API Gateway (https://api.meshapi.ai/v1).
     All completions and structured outputs comply with project schemas.
     """
     provider, api_key, base_url = get_active_provider_info()
-    model = select_model_for_stage(stage_name, provider=provider)
+    model = select_model_for_stage(stage_name)
     start_time = time.time()
 
-    if api_key:
+    if api_key and provider == "mesh":
         try:
             result = await _call_mesh_gateway(
                 prompt=prompt,
@@ -102,15 +87,15 @@ async def call_llm(
             MESH_CALL_METRICS.append({
                 "stage": stage_name,
                 "model": model,
-                "provider": provider,
+                "provider": "mesh",
                 "via_gateway": True,
                 "latency_ms": elapsed_ms,
                 "timestamp": time.time()
             })
             return result
         except Exception as e:
-            # Automatic fallback to secondary model on gateway
-            fallback_model = settings.GROQ_MODEL_FALLBACK if provider == "groq" else settings.MESH_MODEL_FALLBACK
+            # Automatic fallback to secondary model on Mesh gateway
+            fallback_model = settings.MESH_MODEL_FALLBACK
             if fallback_model and fallback_model != model:
                 try:
                     result = await _call_mesh_gateway(
@@ -127,7 +112,7 @@ async def call_llm(
                     MESH_CALL_METRICS.append({
                         "stage": stage_name,
                         "model": fallback_model,
-                        "provider": provider,
+                        "provider": "mesh",
                         "via_gateway": True,
                         "fallback": True,
                         "latency_ms": elapsed_ms,
@@ -135,8 +120,8 @@ async def call_llm(
                     })
                     return result
                 except Exception as fb_err:
-                    print(f"[{provider.upper()} API Gateway Error] Primary and fallback failed: {fb_err}")
-            print(f"[{provider.upper()} API Gateway Error] Call failed: {e}")
+                    print(f"[Mesh API Gateway Error] Primary and fallback failed: {fb_err}")
+            print(f"[Mesh API Gateway Error] Call failed: {e}")
 
     # Offline / local test mode (when API key is not set in development or pytest)
     return _call_offline_test_engine(stage_name, prompt, response_model, context_data)
@@ -153,7 +138,7 @@ async def _call_mesh_gateway(
     stage_name: str = "generic"
 ) -> Any:
     """
-    OpenAI-compatible Gateway routing (Groq / Mesh) via AsyncOpenAI.
+    Official Mesh API Gateway routing via AsyncOpenAI.
     Supports structured Pydantic schema validation with automatic retry on schema errors.
     """
     from openai import AsyncOpenAI
@@ -239,7 +224,7 @@ async def generate_mesh_embedding(text: str, dimensions: int = 1024) -> List[flo
     Complies with sponsor requirement that all AI/embedding calls route through Mesh.
     """
     mesh_key = os.getenv("MESH_API_KEY") or settings.MESH_API_KEY
-    if mesh_key and settings.LLM_PROVIDER == "mesh" and not mesh_key.startswith("gsk_"):
+    if mesh_key and settings.LLM_PROVIDER == "mesh":
         try:
             from openai import AsyncOpenAI
             client = AsyncOpenAI(
