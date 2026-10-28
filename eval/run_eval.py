@@ -17,7 +17,12 @@ Usage:
 """
 
 import sys
+import io
 from pathlib import Path
+
+# Fix Windows console UTF-8 output and ensure unbuffered live prints
+if sys.platform == "win32" and hasattr(sys.stdout, "buffer"):
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace", line_buffering=True)
 
 # Ensure workspace root is in sys.path
 root_dir = Path(__file__).resolve().parent.parent

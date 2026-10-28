@@ -30,18 +30,45 @@ def clean_json_string(text: str) -> str:
         
     return text
 
-def select_model_for_stage(stage_name: str) -> str:
-    """Routes task to appropriate model class via Mesh API."""
+def get_active_provider_info() -> tuple[str, str, str]:
+    """Returns (provider_name, api_key, base_url)."""
+    current_provider = os.getenv("LLM_PROVIDER", settings.LLM_PROVIDER).lower()
+    if current_provider in ("mock", "offline"):
+        return ("offline", "", "")
+
+    mesh_key = os.getenv("MESH_API_KEY") or settings.MESH_API_KEY
+    if mesh_key and (mesh_key.startswith("rsk_") or not mesh_key.startswith("gsk_")):
+        return ("mesh", mesh_key, settings.MESH_BASE_URL)
+
+    groq_key = os.getenv("GROQ_API_KEY") or settings.GROQ_API_KEY
+    if groq_key:
+        return ("groq", groq_key, settings.GROQ_BASE_URL)
+
+    return ("offline", "", "")
+
+def select_model_for_stage(stage_name: str, provider: Optional[str] = None) -> str:
+    """Routes task to appropriate model class via Groq or Mesh API."""
     stage = stage_name.lower()
-    if stage in ("analyst", "learner"):
-        return settings.MESH_MODEL_ANALYST
-    elif stage in ("strategist", "strategy"):
-        return settings.MESH_MODEL_STRATEGIST
-    elif stage in ("critic", "reviewer", "judge", "editor"):
-        return settings.MESH_MODEL_CRITIC
-    elif stage in ("writer", "repurposer", "visual"):
-        return settings.MESH_MODEL_WRITER
-    return settings.MESH_MODEL_DEFAULT
+    if provider == "groq":
+        if stage in ("analyst", "learner"):
+            return settings.GROQ_MODEL_ANALYST
+        elif stage in ("strategist", "strategy"):
+            return settings.GROQ_MODEL_STRATEGIST
+        elif stage in ("critic", "reviewer", "judge", "editor"):
+            return settings.GROQ_MODEL_CRITIC
+        elif stage in ("writer", "repurposer", "visual"):
+            return settings.GROQ_MODEL_WRITER
+        return settings.GROQ_MODEL_DEFAULT
+    else:
+        if stage in ("analyst", "learner"):
+            return settings.MESH_MODEL_ANALYST
+        elif stage in ("strategist", "strategy"):
+            return settings.MESH_MODEL_STRATEGIST
+        elif stage in ("critic", "reviewer", "judge", "editor"):
+            return settings.MESH_MODEL_CRITIC
+        elif stage in ("writer", "repurposer", "visual"):
+            return settings.MESH_MODEL_WRITER
+        return settings.MESH_MODEL_DEFAULT
 
 async def call_llm(
     prompt: str,
@@ -52,21 +79,22 @@ async def call_llm(
     context_data: Optional[dict] = None
 ) -> Any:
     """
-    Unified LLM call routing exclusively through the Mesh API Gateway (https://api.meshapi.ai/v1).
-    All completions and structured outputs comply with sponsor rules.
+    Unified LLM call routing through Groq or Mesh API Gateway.
+    All completions and structured outputs comply with project schemas.
     """
-    mesh_key = os.getenv("MESH_API_KEY") or settings.MESH_API_KEY
-    model = select_model_for_stage(stage_name)
+    provider, api_key, base_url = get_active_provider_info()
+    model = select_model_for_stage(stage_name, provider=provider)
     start_time = time.time()
 
-    if mesh_key:
+    if api_key:
         try:
             result = await _call_mesh_gateway(
                 prompt=prompt,
                 system_prompt=system_prompt,
                 response_model=response_model,
                 model=model,
-                api_key=mesh_key,
+                api_key=api_key,
+                base_url=base_url,
                 temperature=temperature,
                 stage_name=stage_name
             )
@@ -74,14 +102,15 @@ async def call_llm(
             MESH_CALL_METRICS.append({
                 "stage": stage_name,
                 "model": model,
-                "via_mesh": True,
+                "provider": provider,
+                "via_gateway": True,
                 "latency_ms": elapsed_ms,
                 "timestamp": time.time()
             })
             return result
         except Exception as e:
-            # Automatic fallback to secondary model on Mesh gateway
-            fallback_model = settings.MESH_MODEL_FALLBACK
+            # Automatic fallback to secondary model on gateway
+            fallback_model = settings.GROQ_MODEL_FALLBACK if provider == "groq" else settings.MESH_MODEL_FALLBACK
             if fallback_model and fallback_model != model:
                 try:
                     result = await _call_mesh_gateway(
@@ -89,7 +118,8 @@ async def call_llm(
                         system_prompt=system_prompt,
                         response_model=response_model,
                         model=fallback_model,
-                        api_key=mesh_key,
+                        api_key=api_key,
+                        base_url=base_url,
                         temperature=temperature,
                         stage_name=stage_name
                     )
@@ -97,17 +127,18 @@ async def call_llm(
                     MESH_CALL_METRICS.append({
                         "stage": stage_name,
                         "model": fallback_model,
-                        "via_mesh": True,
+                        "provider": provider,
+                        "via_gateway": True,
                         "fallback": True,
                         "latency_ms": elapsed_ms,
                         "timestamp": time.time()
                     })
                     return result
                 except Exception as fb_err:
-                    print(f"[Mesh API Gateway Error] Primary and fallback failed: {fb_err}")
-            print(f"[Mesh API Gateway Error] Call failed: {e}")
+                    print(f"[{provider.upper()} API Gateway Error] Primary and fallback failed: {fb_err}")
+            print(f"[{provider.upper()} API Gateway Error] Call failed: {e}")
 
-    # Offline / local test mode (when MESH_API_KEY is not set in development or pytest)
+    # Offline / local test mode (when API key is not set in development or pytest)
     return _call_offline_test_engine(stage_name, prompt, response_model, context_data)
 
 
@@ -117,24 +148,36 @@ async def _call_mesh_gateway(
     response_model: Optional[Type[T]],
     model: str,
     api_key: str,
+    base_url: Optional[str] = None,
     temperature: float = 0.7,
     stage_name: str = "generic"
 ) -> Any:
     """
-    Official Mesh API Gateway routing via OpenAI SDK (base_url: https://api.meshapi.ai/v1).
-    Supports structured Pydantic schema validation with 1 automatic retry on schema errors.
+    OpenAI-compatible Gateway routing (Groq / Mesh) via AsyncOpenAI.
+    Supports structured Pydantic schema validation with automatic retry on schema errors.
     """
     from openai import AsyncOpenAI
+    gateway_url = base_url or settings.MESH_BASE_URL
     client = AsyncOpenAI(
-        base_url=settings.MESH_BASE_URL,
+        base_url=gateway_url,
         api_key=api_key,
-        timeout=45.0
+        timeout=60.0
     )
 
     req_system = system_prompt or ""
     req_prompt = prompt
-    if response_model and "json" not in f"{req_system} {req_prompt}".lower():
-        req_system = (req_system + "\n\nYou must respond with a valid JSON object matching the requested schema.").strip()
+    if response_model:
+        try:
+            schema_dict = response_model.model_json_schema()
+            # Clean schema representation for prompt
+            schema_json = json.dumps(schema_dict, indent=2)
+            schema_instruction = f"\n\nYou must return ONLY a valid JSON object strictly matching this JSON schema:\n{schema_json}"
+            req_system = (req_system + schema_instruction).strip()
+        except Exception:
+            if "json" not in f"{req_system} {req_prompt}".lower():
+                req_system = (req_system + "\n\nYou must respond with a valid JSON object matching the requested schema.").strip()
+    elif "json" not in f"{req_system} {req_prompt}".lower() and "{" in req_prompt:
+        req_system = (req_system + "\n\nYou must respond with a valid JSON object.").strip()
 
     messages = []
     if req_system:
@@ -142,7 +185,7 @@ async def _call_mesh_gateway(
     messages.append({"role": "user", "content": req_prompt})
 
     # Multi-attempt execution with exponential backoff for rate limits/timeouts
-    attempts = 3
+    attempts = 2
     content = ""
     for attempt_idx in range(attempts):
         try:
@@ -196,7 +239,7 @@ async def generate_mesh_embedding(text: str, dimensions: int = 1024) -> List[flo
     Complies with sponsor requirement that all AI/embedding calls route through Mesh.
     """
     mesh_key = os.getenv("MESH_API_KEY") or settings.MESH_API_KEY
-    if mesh_key:
+    if mesh_key and settings.LLM_PROVIDER == "mesh" and not mesh_key.startswith("gsk_"):
         try:
             from openai import AsyncOpenAI
             client = AsyncOpenAI(

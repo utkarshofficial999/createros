@@ -12,10 +12,27 @@ from backend.app.models import Creator, Post, PostVersion, GenerationRun, Creato
 from backend.app.schemas import (
     Strategy, Review, GeneratedContent, RepurposedContent, CreatorModel, VisualDirection, LearnedRule
 )
-from backend.app.services.llm import call_llm
+from backend.app.services.llm import call_llm, clean_json_string
 from backend.app.services.features import extract_features
 from backend.app.services.vector_store import search_relevant_posts, upsert_post_to_pinecone
 from backend.app.config import settings
+
+def unwrap_content_string(text: str) -> str:
+    """Extracts raw markdown text if LLM wrapped it inside a JSON structure like {'draft': '...'}."""
+    if not text:
+        return ""
+    trimmed = text.strip()
+    if (trimmed.startswith("{") and trimmed.endswith("}")) or (trimmed.startswith("```") and "{" in trimmed):
+        try:
+            cleaned = clean_json_string(trimmed)
+            data = json.loads(cleaned)
+            if isinstance(data, dict):
+                for k in ["draft", "content", "body", "post", "markdown", "text"]:
+                    if k in data and isinstance(data[k], str) and len(data[k]) > 20:
+                        return data[k].strip()
+        except Exception:
+            pass
+    return text
 
 PROMPTS_DIR = Path(__file__).parent.parent / "prompts"
 
@@ -157,6 +174,7 @@ async def execute_content_pipeline(
             stage_name="writer",
             context_data={"topic": topic, "model_version": model_version, "attempt": attempt, "feedback": feedback_notes}
         )
+        draft_content = unwrap_content_string(draft_content)
         final_draft = draft_content
 
         yield f"event: stage\ndata: {json.dumps({'stage': 'writing', 'status': 'done', 'attempt': attempt})}\n\n"

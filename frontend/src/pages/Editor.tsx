@@ -25,6 +25,30 @@ interface EditorProps {
   onPostPublished: () => void;
 }
 
+export const cleanContentText = (raw: string): string => {
+  if (!raw) return '';
+  const trimmed = raw.trim();
+  if ((trimmed.startsWith('{') && trimmed.endsWith('}')) || (trimmed.startsWith('```') && trimmed.includes('{'))) {
+    try {
+      let jsonStr = trimmed;
+      if (jsonStr.startsWith('```')) {
+        jsonStr = jsonStr.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
+      }
+      const parsed = JSON.parse(jsonStr);
+      if (typeof parsed === 'object' && parsed !== null) {
+        for (const k of ['draft', 'content', 'body', 'post', 'markdown', 'text']) {
+          if (parsed[k] && typeof parsed[k] === 'string' && parsed[k].length > 20) {
+            return parsed[k].trim();
+          }
+        }
+      }
+    } catch {
+      // not JSON, keep as-is
+    }
+  }
+  return raw;
+};
+
 export const Editor: React.FC<EditorProps> = ({
   latestGeneration,
   onPostPublished
@@ -102,7 +126,8 @@ export const Editor: React.FC<EditorProps> = ({
     try {
       const post = await api.getPostDetail(id);
       setSelectedPost(post);
-      setMainContent(post.body);
+      const cleanBody = cleanContentText(post.body);
+      setMainContent(cleanBody);
       setVersions(post.versions || []);
       if (post.versions && post.versions.length > 0) {
         setSelectedVersionNum(post.versions[post.versions.length - 1].version_number);
@@ -110,7 +135,7 @@ export const Editor: React.FC<EditorProps> = ({
       
       // Default placeholder repurposed content if loading seeded post
       if (!linkedinPost || linkedinPost.length < 50) {
-        setLinkedinPost(post.body.trim() + "\n\n#AI #Engineering #Systems");
+        setLinkedinPost(cleanBody.trim() + "\n\n#AI #Engineering #Systems");
       }
       if (xThread.length === 0) {
         setXThread([
@@ -194,7 +219,7 @@ export const Editor: React.FC<EditorProps> = ({
     setSelectedVersionNum(vNum);
     const target = versions.find((v) => v.version_number === vNum);
     if (target) {
-      setMainContent(target.content);
+      setMainContent(cleanContentText(target.content));
     }
   };
 
